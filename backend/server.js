@@ -13,12 +13,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'src', 'uploads')));
 
-// const apiRouter = require('./src/routes/index');
+const apiRouter = require('./src/routes/index');
 
 app.use(cors());
 app.use(morgan('dev'))
 
-// app.use('/api', apiRouter);
+app.use('/api', apiRouter);
 app.get('/', (req, res) => {
     res.send('Hello world')
 })
