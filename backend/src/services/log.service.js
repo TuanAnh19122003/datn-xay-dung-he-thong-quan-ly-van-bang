@@ -8,11 +8,15 @@ class LogService {
         });
     }
 
-    static async create(data) {
-        return await Log.create(data);
+    static async create({ userId, action, targetId, targetType, ip }) {
+        return await Log.create({
+            userId,
+            action,
+            targetId,
+            targetType,
+            ip
+        });
     }
-
-    
 }
 
 module.exports = LogService;

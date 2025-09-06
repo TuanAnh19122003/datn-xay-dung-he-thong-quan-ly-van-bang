@@ -9,6 +9,7 @@ const templateRouter = require('./template.routes');
 const studentRouter = require('./student.routes');
 const certRouter = require('./cert.routes');
 const logRouter = require('./log.routes');
+const authRouter = require('./auth.routes');
 
 router.use('/roles', roleRouter);
 router.use('/users', userRouter);
@@ -18,5 +19,6 @@ router.use('/templates', templateRouter);
 router.use('/students', studentRouter);
 router.use('/certs', certRouter);
 router.use('/logs', logRouter);
+router.use('/auth', authRouter);
 
 module.exports = router;
