@@ -20,7 +20,7 @@ const Cert = sequelize.define('Cert', {
         allowNull: false,
     },
     number: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING,
         allowNull: false,
         unique: true,
     },
@@ -29,7 +29,7 @@ const Cert = sequelize.define('Cert', {
         allowNull: true,
     },
     issuer: {
-        type: DataTypes.STRING(100),
+        type: DataTypes.STRING,
         defaultValue: 'ĐH Điện lực',
     },
     status: {
@@ -37,7 +37,7 @@ const Cert = sequelize.define('Cert', {
         defaultValue: 'draft',
     },
     fileUrl: {
-        type: DataTypes.STRING(255),
+        type: DataTypes.STRING,
         allowNull: true,
     }
 }, {

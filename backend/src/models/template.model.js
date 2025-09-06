@@ -8,7 +8,7 @@ const Template = sequelize.define('Template', {
         primaryKey: true,
     },
     name: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING,
         allowNull: false,
     },
     desc: {
@@ -16,7 +16,7 @@ const Template = sequelize.define('Template', {
         allowNull: true,
     },
     fileUrl: {
-        type: DataTypes.STRING(255),
+        type: DataTypes.STRING,
         allowNull: true,
     }
 }, {

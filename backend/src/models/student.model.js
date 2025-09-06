@@ -12,7 +12,7 @@ const Student = sequelize.define('Student', {
         allowNull: true,
     },
     code: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING,
         allowNull: false,
         unique: true,
     },
@@ -33,11 +33,12 @@ const Student = sequelize.define('Student', {
         allowNull: true,
     },
     email: {
-        type: DataTypes.STRING(100),
+        type: DataTypes.STRING,
         allowNull: true,
+        unique: true
     },
     phone: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING,
         allowNull: true,
     },
     address: {

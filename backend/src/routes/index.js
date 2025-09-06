@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const logMiddleware = require('../middlewares/log.middleware');
 
 const roleRouter = require('./role.routes');
 const userRouter = require('./user.routes');
@@ -11,6 +12,7 @@ const certRouter = require('./cert.routes');
 const logRouter = require('./log.routes');
 const authRouter = require('./auth.routes');
 
+router.use(logMiddleware);
 router.use('/roles', roleRouter);
 router.use('/users', userRouter);
 router.use('/departments', departmentRouter);

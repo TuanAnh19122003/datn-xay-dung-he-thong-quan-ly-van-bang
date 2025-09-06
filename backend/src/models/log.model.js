@@ -12,7 +12,7 @@ const Log = sequelize.define('Log', {
         allowNull: false,
     },
     action: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING,
         allowNull: false,
     },
     targetId: {
@@ -20,11 +20,11 @@ const Log = sequelize.define('Log', {
         allowNull: true,
     },
     targetType: {
-        type: DataTypes.ENUM('student', 'cert', 'template'),
+        type: DataTypes.STRING,
         allowNull: true,
     },
     ip: {
-        type: DataTypes.STRING(45),
+        type: DataTypes.STRING,
         allowNull: true,
     }
 }, {
