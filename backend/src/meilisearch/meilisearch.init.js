@@ -1,12 +1,11 @@
-const student = require('./student.search');
+const studentSearch = require('./student.search');
 
 async function initMeilisearch() {
     try {
-        await student.init();
-        console.log('Meilisearch index for certificates initialized & synced.');
-
+        await studentSearch.init();
+        console.log('Meilisearch index cho Student đã được khởi tạo và đồng bộ.');
     } catch (err) {
-        console.error('Meilisearch initialization failed:', err);
+        console.error('Khởi tạo Meilisearch thất bại:', err);
         throw err;
     }
 }

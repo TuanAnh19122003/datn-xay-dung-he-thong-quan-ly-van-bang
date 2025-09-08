@@ -1,4 +1,5 @@
 const Student = require('../models/student.model');
+const Major = require('../models/major.model');
 const BaseSearchSyncService = require('./base.search.service');
 
 const studentSearch = new BaseSearchSyncService(
@@ -12,6 +13,10 @@ const studentSearch = new BaseSearchSyncService(
         'email',
         'phone',
         'address'
+    ],
+    'id',
+    [
+        { model: Major, as: 'major' } // join Major để lấy tên
     ]
 );
 

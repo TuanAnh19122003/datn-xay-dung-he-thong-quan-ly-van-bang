@@ -53,7 +53,7 @@ class StudentService {
         if (!student) throw new Error('student không tồn tại');
 
         await Student.destroy({ where: { id } });
-        await studentSearch.remove(id);
+        await studentSearch.delete(id);
         return true;
     }
 
