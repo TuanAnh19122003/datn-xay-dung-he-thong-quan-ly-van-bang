@@ -9,6 +9,7 @@ require('dotenv').config();
 const port = process.env.PORT || 5001;
 const db = require('./src/models/index');
 
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'src', 'uploads')));
@@ -23,6 +24,16 @@ app.get('/', (req, res) => {
     res.send('Hello world')
 })
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-})
+const { initMeilisearch } = require('./src/meilisearch/meilisearch.init');
+(async () => {
+    try {
+        await initMeilisearch();
+        app.listen(port, () => {
+            console.log(`Server is running on http://localhost:${port}`);
+        });
+
+    } catch (err) {
+        console.error('❌ Server start failed due to Meilisearch error:', err);
+        process.exit(1);
+    }
+})();

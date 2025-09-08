@@ -1,4 +1,5 @@
 const StudentService = require('../services/student.service');
+const studentSearch = require('../meilisearch/student.search');
 
 class StudentController {
     async findAll(req, res) {
@@ -72,6 +73,40 @@ class StudentController {
                 success: false,
                 message: error.message
             });
+        }
+    }
+
+    async getCertsByStudent(req, res) {
+        try {
+            const studentId = req.params.id;
+            const certs = await StudentService.getCertsByStudent(studentId);
+
+            return res.status(200).json({
+                success: true,
+                message: 'Lấy danh sách văn bằng thành công',
+                data: certs
+            });
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({
+                success: false,
+                message: 'Không thể lấy danh sách văn bằng',
+                error: err.message
+            });
+        }
+    }
+
+    async search(req, res) {
+        try {
+            const q = req.query.q || '';
+
+            const results = await studentSearch.search(q, {
+                limit: 50,
+            });
+
+            res.status(200).json({ success: true, data: results.hits });
+        } catch (err) {
+            res.status(500).json({ success: false, message: err.message });
         }
     }
 }

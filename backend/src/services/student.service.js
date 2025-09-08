@@ -1,4 +1,7 @@
 const Student = require('../models/student.model');
+const Cert = require('../models/cert.model');
+const Major = require('../models/major.model');
+const studentSearch = require('../meilisearch/student.search');
 
 class StudentService {
     static async findAll() {
@@ -12,6 +15,7 @@ class StudentService {
         }
 
         const student = await Student.create(data);
+        await studentSearch.add(student)
         return student;
     }
 
@@ -31,11 +35,38 @@ class StudentService {
             data.image = `uploads/${file.filename}`;
         }
 
-        return await student.update(data)
+        const updated = await student.update(data);
+        await studentSearch.update(updated)
+        return updated;
     }
 
     static async delete(id) {
-        return await Student.destroy({ where: { id } });
+        const student = await Student.findOne({ where: { id } });
+        if (!student) throw new Error('student không tồn tại');
+        
+        await Student.destroy({ where: { id } });
+        await studentSearch.remove(id);
+        return true;
+    }
+    
+    static async getCertsByStudent(studentId) {
+        const data = await Cert.findOne({
+            where: { id: studentId },
+            include: [
+                {
+                    model: Major,
+                    as: 'major',
+                    attributes: ['id', 'name']
+                },
+                {
+                    model: Student,
+                    as: 'student',
+                    attributes: ['id', 'lastname', 'firstname']
+                }
+            ]
+        });
+
+        return data
     }
 
 }
