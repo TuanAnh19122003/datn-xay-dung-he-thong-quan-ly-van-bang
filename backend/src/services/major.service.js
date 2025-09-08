@@ -2,7 +2,15 @@ const Major = require('../models/major.model')
 
 class MajorService{
     static async findAll() {
-        const data = await Major.findAll();
+        const data = await Major.findAll({
+            include:[
+                {
+                    model: require('../models/department.model'),
+                    as:'department',
+                    attributes:['name']
+                }
+            ]
+        });
         return data
     }
 

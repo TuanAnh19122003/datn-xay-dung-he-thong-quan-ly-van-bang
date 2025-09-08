@@ -5,7 +5,15 @@ const fs = require('fs');
 
 class UserService {
     static async findAll() {
-        const data = User.findAll();
+        const data = User.findAll({
+            include: [
+                {
+                    model: require('../models/role.model'),
+                    as: 'role',
+                    attributes: ['id', 'name']
+                }
+            ]
+        });
         return data;
     }
 

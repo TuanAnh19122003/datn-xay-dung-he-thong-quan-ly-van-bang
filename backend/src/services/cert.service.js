@@ -2,7 +2,20 @@ const Cert = require('../models/cert.model');
 
 class CertService {
     static async findAll() {
-        const data = await Cert.findAll();
+        const data = await Cert.findAll({
+            include: [
+                {
+                    model: require('../models/student.model'),
+                    as: 'student',
+                    attributes: ['lastname', 'firstname']
+                },
+                {
+                    model: require('../models/template.model'),
+                    as: 'template',
+                    attributes: ['name']
+                }
+            ]
+        });
         return data
     }
 

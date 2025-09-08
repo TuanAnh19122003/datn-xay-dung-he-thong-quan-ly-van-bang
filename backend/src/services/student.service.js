@@ -5,7 +5,15 @@ const studentSearch = require('../meilisearch/student.search');
 
 class StudentService {
     static async findAll() {
-        const data = Student.findAll();
+        const data = Student.findAll({
+            include: [
+                {
+                    model: require('../models/major.model'),
+                    as: 'major',
+                    attributes: ['name']
+                }
+            ]
+        });
         return data;
     }
 
@@ -43,12 +51,12 @@ class StudentService {
     static async delete(id) {
         const student = await Student.findOne({ where: { id } });
         if (!student) throw new Error('student không tồn tại');
-        
+
         await Student.destroy({ where: { id } });
         await studentSearch.remove(id);
         return true;
     }
-    
+
     static async getCertsByStudent(studentId) {
         const data = await Cert.findOne({
             where: { id: studentId },

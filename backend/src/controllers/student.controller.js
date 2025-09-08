@@ -5,7 +5,7 @@ class StudentController {
     async findAll(req, res) {
         try {
             const data = await StudentService.findAll();
-            res.status(201).json({
+            res.status(200).json({
                 success: true,
                 message: 'Lấy dữ liệu thành công',
                 data
