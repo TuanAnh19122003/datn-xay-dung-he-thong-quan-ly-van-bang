@@ -11,9 +11,9 @@ const Cert = sequelize.define('Cert', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    majorId: {
+    templateId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     type: {
         type: DataTypes.ENUM('BA', 'MA', 'PhD', 'CERT'),
@@ -39,7 +39,7 @@ const Cert = sequelize.define('Cert', {
     fileUrl: {
         type: DataTypes.STRING,
         allowNull: true,
-    }
+    },
 }, {
     timestamps: true,
     tableName: 'certs'

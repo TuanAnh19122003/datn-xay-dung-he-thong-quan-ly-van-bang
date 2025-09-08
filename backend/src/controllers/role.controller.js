@@ -4,7 +4,7 @@ class RoleController {
     async findAll(req, res) {
         try {
             const data = await RoleService.findAll();
-            res.status(201).json({
+            res.status(200).json({
                 success: true,
                 message: 'Lấy dữ liệu thành công',
                 data

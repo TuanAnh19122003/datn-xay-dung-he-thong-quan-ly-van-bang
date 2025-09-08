@@ -13,12 +13,9 @@ module.exports = (db) => {
     Student.belongsTo(Major, { foreignKey: 'majorId', as: 'major' });
     Major.hasMany(Student, { foreignKey: 'majorId', as: 'students' });
 
-    // ========== Cert ↔ Student / Major ==========
+    // ========== Cert ↔ Student ==========
     Cert.belongsTo(Student, { foreignKey: 'studentId', as: 'student' });
     Student.hasMany(Cert, { foreignKey: 'studentId', as: 'certs' });
-
-    Cert.belongsTo(Major, { foreignKey: 'majorId', as: 'major' });
-    Major.hasMany(Cert, { foreignKey: 'majorId', as: 'certs' });
 
     // ========== Cert ↔ Template ==========
     Cert.belongsTo(Template, { foreignKey: 'templateId', as: 'template' });
