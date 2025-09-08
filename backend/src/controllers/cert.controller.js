@@ -1,4 +1,5 @@
 const CertService = require('../services/cert.service');
+const certSearch = require('../meilisearch/cert.search');
 
 class CertController {
     async findAll(req, res) {
@@ -71,6 +72,17 @@ class CertController {
                 message: "Đã xảy ra lỗi khi xóa",
                 error: error.message
             });
+        }
+    }
+    
+    async search(req, res) {
+        try {
+            const q = req.query.q || '';
+            const results = await certSearch.search(q, { limit: 50 });
+
+            res.status(200).json({ success: true, data: results.hits });
+        } catch (err) {
+            res.status(500).json({ success: false, message: err.message });
         }
     }
 }

@@ -26,9 +26,14 @@ class BaseSearchSyncService {
 
             this.include.forEach(rel => {
                 if (i[rel.as]) {
-                    obj[rel.as + 'Name'] = i[rel.as].name;
+                    if (rel.as === 'student') {
+                        obj[rel.as + 'Name'] = `${i[rel.as].lastname} ${i[rel.as].firstname}`;
+                    } else {
+                        obj[rel.as + 'Name'] = i[rel.as].name;
+                    }
                 }
             });
+
 
             return obj;
         });
