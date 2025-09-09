@@ -25,15 +25,16 @@ app.get('/', (req, res) => {
 })
 
 const { initMeilisearch } = require('./src/meilisearch/meilisearch.init');
+
 (async () => {
     try {
         await initMeilisearch();
+        console.log('Meilisearch initialized successfully');
+    } catch (err) {
+        console.warn('Meilisearch not available, continuing without it:', err.message);
+    } finally {
         app.listen(port, () => {
             console.log(`Server is running on http://localhost:${port}`);
         });
-
-    } catch (err) {
-        console.error('❌ Server start failed due to Meilisearch error:', err);
-        process.exit(1);
     }
 })();
