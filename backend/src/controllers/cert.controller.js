@@ -74,17 +74,32 @@ class CertController {
             });
         }
     }
-    
+
     async search(req, res) {
         try {
             const q = req.query.q || '';
-            const results = await certSearch.search(q, { limit: 50 });
+            let results;
+
+            if (/^\d+$/.test(q)) {
+                results = await certSearch.search('', {
+                    filter: `studentCode = "${q}"`,
+                    limit: 50
+                });
+            } else if (/^CERT\d+$/i.test(q)) {
+                results = await certSearch.search('', {
+                    filter: `number = "${q}"`,
+                    limit: 1
+                });
+            } else {
+                results = await certSearch.search(q, { limit: 50 });
+            }
 
             res.status(200).json({ success: true, data: results.hits });
         } catch (err) {
             res.status(500).json({ success: false, message: err.message });
         }
     }
+
 }
 
 module.exports = new CertController;

@@ -12,12 +12,21 @@ class BaseSearchSyncService {
 
     async init() {
         const allFields = [...this.fields];
-        this.include.forEach(rel => allFields.push(rel.as + 'Name'));
+
+        this.include.forEach(rel => {
+            if (rel.as === 'student') {
+                allFields.push('studentName', 'studentCode');
+            } else {
+                allFields.push(rel.as + 'Name');
+            }
+        });
+
         await this.searchService.createIndex(allFields);
 
         const all = await this.model.findAll({ include: this.include });
         await this.sync(all);
     }
+
 
     async sync(instances) {
         const docs = instances.map(i => {
@@ -27,13 +36,13 @@ class BaseSearchSyncService {
             this.include.forEach(rel => {
                 if (i[rel.as]) {
                     if (rel.as === 'student') {
-                        obj[rel.as + 'Name'] = `${i[rel.as].lastname} ${i[rel.as].firstname}`;
+                        obj['studentName'] = `${i[rel.as].lastname} ${i[rel.as].firstname}`;
+                        obj['studentCode'] = i[rel.as].code;
                     } else {
                         obj[rel.as + 'Name'] = i[rel.as].name;
                     }
                 }
             });
-
 
             return obj;
         });

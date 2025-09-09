@@ -20,7 +20,7 @@ class SearchService {
             await this.index.updateSearchableAttributes(fields);
             await this.index.updateDisplayedAttributes(fields);
 
-            const filterables = ['code'];
+            const filterables = ['code', 'studentCode', 'number'];
             await this.index.updateFilterableAttributes(filterables);
         }
     }
