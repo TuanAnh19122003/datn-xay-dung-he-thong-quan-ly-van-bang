@@ -16,20 +16,20 @@
 
 	export let collapsed = false;
 
-	// const user = writable(null);
+	const user = writable(null);
 
-	// onMount(() => {
-	// 	const userData = localStorage.getItem('user');
-	// 	if (userData) {
-	// 		user.set(JSON.parse(userData));
-	// 	} else {
-	// 		window.location.href = '/auth/login';
-	// 	}
-	// });
+	onMount(() => {
+		const userData = localStorage.getItem('user');
+		if (userData) {
+			user.set(JSON.parse(userData));
+		} else {
+			window.location.href = '/auth/login';
+		}
+	});
 
 	const menuItems = [
 		{ key: 'user-management', label: 'Quản lý người dùng', link: '/admin/user', icon: User },
-		{ key: 'role-management', label: 'Quản lý vai trò', link: '/admin/roles', icon: Shield },
+		{ key: 'role-management', label: 'Quản lý vai trò', link: '/admin/role', icon: Shield },
 		{ key: 'faculty', label: 'Khoa', link: '/admin/faculty', icon: Home },
 		{ key: 'major', label: 'Chuyên ngành', link: '/admin/major', icon: Book },
 		{ key: 'template', label: 'Template', link: '/admin/template', icon: FileText },
@@ -57,7 +57,6 @@
 				href={item.link}
 				class="mx-2 my-1 flex items-center gap-3 rounded-lg px-4 py-2 text-white transition-colors hover:bg-gray-700"
 			>
-				<!-- Sử dụng svelte:component để render icon -->
 				<svelte:component this={item.icon} class="h-5 w-5" />
 				{#if !collapsed}
 					<span class="font-medium">{item.label}</span>

@@ -13,7 +13,7 @@ class AuthService {
             include: {
                 model: Role,
                 as: 'role',
-                attributes: ['id', 'name']
+                attributes: ['id', 'name', 'code']
             }
         })
 

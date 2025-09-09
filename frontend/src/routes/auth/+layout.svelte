@@ -3,20 +3,14 @@
 	import Footer from "$lib/components/auth/footer.svelte";
 </script>
 
-<div class="auth-layout">
+<div class="min-h-screen flex flex-col">
 	<Header />
-	<main>
-		<slot />
+
+	<main class="flex-1 flex items-center justify-center bg-gradient-to-br from-blue-400 to-purple-500 px-4">
+		<div class="w-full max-w-md">
+			<slot />
+		</div>
 	</main>
+
 	<Footer />
 </div>
-
-<style>
-	.auth-layout {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		height: 100vh;
-		background: #f0f2f5;
-	}
-</style>
