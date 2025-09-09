@@ -7,7 +7,7 @@ class CertService {
                 {
                     model: require('../models/student.model'),
                     as: 'student',
-                    attributes: ['lastname', 'firstname']
+                    attributes: ['lastname', 'firstname', 'code']
                 },
                 {
                     model: require('../models/template.model'),

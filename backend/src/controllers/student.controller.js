@@ -99,16 +99,24 @@ class StudentController {
     async search(req, res) {
         try {
             const q = req.query.q || '';
+            let results;
 
-            const results = await studentSearch.search(q, {
-                limit: 50,
-            });
+            if (/^\d+$/.test(q)) {
+                results = await studentSearch.search('', {
+                    filter: `code = "${q}"`,
+                    limit: 1
+                });
+            } else {
+                results = await studentSearch.search(q, { limit: 50 });
+            }
 
             res.status(200).json({ success: true, data: results.hits });
         } catch (err) {
             res.status(500).json({ success: false, message: err.message });
         }
     }
+
+
 }
 
 module.exports = new StudentController();

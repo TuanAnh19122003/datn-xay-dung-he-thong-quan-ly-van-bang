@@ -16,7 +16,7 @@ const studentSearch = new BaseSearchSyncService(
     ],
     'id',
     [
-        { model: Major, as: 'major' } // join Major để lấy tên
+        { model: Major, as: 'major' }
     ]
 );
 

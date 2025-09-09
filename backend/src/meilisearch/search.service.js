@@ -19,6 +19,9 @@ class SearchService {
         if (fields.length > 0) {
             await this.index.updateSearchableAttributes(fields);
             await this.index.updateDisplayedAttributes(fields);
+
+            const filterables = ['code'];
+            await this.index.updateFilterableAttributes(filterables);
         }
     }
 
