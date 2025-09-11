@@ -40,6 +40,7 @@ class BaseSearchSyncService {
                         obj['studentCode'] = i[rel.as].code;
                     } else {
                         obj[rel.as + 'Name'] = i[rel.as].name;
+                        obj[rel.as + 'Code'] = i[rel.as].code
                     }
                 }
             });

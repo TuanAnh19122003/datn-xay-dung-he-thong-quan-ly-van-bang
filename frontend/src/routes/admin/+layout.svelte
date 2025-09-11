@@ -4,15 +4,16 @@
 	import Footer from '$lib/components/admin/Footer.svelte';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { Toaster } from 'svelte-sonner';
 
 	let collapsed = false;
 
-	// onMount(() => {
-	// 	const token = localStorage.getItem('token');
-	// 	if (!token) {
-	// 		goto('/auth/login');
-	// 	}
-	// });
+	onMount(() => {
+		const token = localStorage.getItem('token');
+		if (!token) {
+			goto('/auth/login');
+		}
+	});
 </script>
 
 <div class="flex min-h-screen">
@@ -24,6 +25,8 @@
 		<main class="flex-1 overflow-auto bg-gray-50 p-4">
 			<slot />
 		</main>
+		
+		<Toaster position="top-center" richColors duration={3000}/>
 
 		<Footer />
 	</div>

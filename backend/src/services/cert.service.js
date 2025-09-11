@@ -1,4 +1,5 @@
 const Cert = require('../models/cert.model');
+const certSearch = require('../meilisearch/cert.search');
 
 class CertService {
     static async findAll() {
@@ -20,18 +21,27 @@ class CertService {
     }
 
     static async create(data) {
-        const cert = await Cert.create(data)
+        const cert = await Cert.create(data);
+        await certSearch.add(cert)
         return cert
     }
 
     static async update(id, data) {
         const cert = await Cert.findOne({ where: { id: id } })
         if (!cert) throw new Error('Không tìm thấy cert');
-        return await cert.update(data)
+
+        const updated = await cert.update(data);
+        await certSearch.update(updated)
+        return updated;
     }
 
     static async delete(id) {
-        return await Cert.destroy({ where: { id: id } })
+        const cert = await Cert.findOne({ where: { id } });
+        if (!cert) throw new Error('cert không tồn tại');
+
+        await Cert.destroy({ where: { id } });
+        await certSearch.delete(id);
+        return true;
     }
 }
 
