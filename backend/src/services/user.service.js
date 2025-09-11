@@ -2,10 +2,22 @@ const User = require('../models/user.model');
 const hashPassword = require('../utils/hashPassword');
 const path = require('path');
 const fs = require('fs');
+const userSearch = require('../meilisearch/user.search');
 
 class UserService {
-    static async findAll() {
-        const data = User.findAll({
+    static async findAll(options = {}) {
+        const { offset, limit } = options;
+
+        const queryOptions = {
+            order: [['createdAt', 'ASC']]
+        };
+
+        if (offset !== undefined && limit !== undefined) {
+            queryOptions.offset = offset;
+            queryOptions.limit = limit;
+        }
+
+        const data = User.findAndCountAll(queryOptions, {
             include: [
                 {
                     model: require('../models/role.model'),
@@ -26,6 +38,7 @@ class UserService {
         }
 
         const user = await User.create(data);
+        await userSearch.add(user)
         return user;
     }
 
@@ -53,7 +66,9 @@ class UserService {
             data.image = `uploads/${file.filename}`;
         }
 
-        return await user.update(data)
+        const updated = await user.update(data);
+        await userSearch.update(updated)
+        return updated;
     }
 
     static async delete(id) {
@@ -67,7 +82,9 @@ class UserService {
             }
         }
 
-        return await User.destroy({ where: { id } });
+        await User.destroy({ where: { id } });
+        await userSearch.delete(id);
+        return true;
     }
 
 }
