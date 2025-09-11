@@ -17,7 +17,8 @@ class UserService {
             queryOptions.limit = limit;
         }
 
-        const data = User.findAndCountAll(queryOptions, {
+        const data = User.findAndCountAll({
+            ...queryOptions,
             include: [
                 {
                     model: require('../models/role.model'),
@@ -26,6 +27,7 @@ class UserService {
                 }
             ]
         });
+
         return data;
     }
 
