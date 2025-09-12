@@ -3,18 +3,39 @@ const LogService = require('../services/log.service');
 class LogController {
     async findAll(req, res) {
         try {
-            const { limit } = req.query;
-            const data = await LogService.findAll(limit ? parseInt(limit) : 100);
+            const page = parseInt(req.query.page);
+            const pageSize = parseInt(req.query.pageSize);
+
+            let result;
+
+            if (!page || !pageSize) {
+                // Không phân trang
+                result = await LogService.findAll();
+                return res.status(200).json({
+                    success: true,
+                    message: 'Lấy tất cả vai trò thành công',
+                    data: result.rows,
+                    total: result.count
+                });
+            }
+
+            const offset = (page - 1) * pageSize;
+            result = await LogService.findAll({ offset, limit: pageSize });
 
             res.status(200).json({
                 success: true,
-                message: 'Lấy danh sách log thành công',
-                data
+                message: 'Lấy danh sách vai trò thành công',
+                data: result.rows,
+                total: result.count,
+                page,
+                pageSize
             });
         } catch (error) {
+            console.error('Lỗi:', error);
             res.status(500).json({
                 success: false,
-                message: error.message
+                message: 'Đã xảy ra lỗi khi lấy danh sách vai trò',
+                error: error.message
             });
         }
     }

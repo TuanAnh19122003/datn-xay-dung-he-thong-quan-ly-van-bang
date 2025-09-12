@@ -1,11 +1,29 @@
 const Log = require('../models/log.model');
 
 class LogService {
-    static async findAll(limit = 100) {
-        return await Log.findAll({
-            order: [['createdAt', 'DESC']],
-            limit
+    static async findAll(options = {}) {
+        const { offset, limit } = options;
+
+        const queryOptions = {
+            order: [['createdAt', 'ASC']]
+        };
+
+        if (offset !== undefined && limit !== undefined) {
+            queryOptions.offset = offset;
+            queryOptions.limit = limit;
+        }
+
+        const logs = await Log.findAndCountAll({
+            ...queryOptions,
+            include:[
+                {
+                    model: require('../models/user.model'),
+                    as: 'user',
+                    attributes: ['id', 'firstname', 'lastname']
+                }
+            ]
         });
+        return logs;
     }
 
     static async create({ userId, action, targetId, targetType, ip }) {

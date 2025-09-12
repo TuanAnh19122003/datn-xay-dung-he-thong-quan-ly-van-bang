@@ -17,14 +17,14 @@
 	const dispatch = createEventDispatcher();
 	let formData = { ...initialValues };
 	let filePreview = formData.image ? formData.image : null;
-	let roles = []; // danh sách roles
+	let roles = [];
 
 	const API_URL = import.meta.env.VITE_API_URL;
 
 	onMount(async () => {
 		try {
 			const res = await axios.get(`${API_URL}/roles`);
-			roles = res.data.data; // API của bạn trả về { data: [...] }
+			roles = res.data.data;
 		} catch (err) {
 			toast.error('Không tải được danh sách vai trò');
 		}

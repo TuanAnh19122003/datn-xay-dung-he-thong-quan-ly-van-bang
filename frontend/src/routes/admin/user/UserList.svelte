@@ -42,7 +42,7 @@
 	}
 </script>
 
-<div class="overflow-hidden rounded-xl border bg-white shadow-sm">
+<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
 	<table class="w-full border-collapse text-sm">
 		<thead class="bg-gray-50 text-gray-700">
 			<tr>
@@ -111,7 +111,7 @@
 	<span class="text-gray-600">Trang {pagination.current} / {totalPages}</span>
 	<div class="flex items-center gap-1">
 		<button
-			class="rounded-full border px-3 py-1.5"
+			class="flex items-center rounded-full border border-gray-300 px-3 py-1.5 hover:bg-gray-100 disabled:opacity-50"
 			on:click={() => dispatch('pageChange', pagination.current - 1)}
 			disabled={pagination.current <= 1}
 		>
@@ -130,7 +130,7 @@
 			{/if}
 		{/each}
 		<button
-			class="rounded-full border px-3 py-1.5"
+			class="flex items-center rounded-full border border-gray-300 px-3 py-1.5 hover:bg-gray-100 disabled:opacity-50"
 			on:click={() => dispatch('pageChange', pagination.current + 1)}
 			disabled={pagination.current >= totalPages}
 		>

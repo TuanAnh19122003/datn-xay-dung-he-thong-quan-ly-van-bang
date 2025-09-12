@@ -34,7 +34,7 @@
 		{ key: 'major', label: 'Chuyên ngành', link: '/admin/major', icon: Book },
 		{ key: 'template', label: 'Template', link: '/admin/template', icon: FileText },
 		{ key: 'student', label: 'Sinh viên', link: '/admin/students', icon: GraduationCap },
-		{ key: 'logs', label: 'Kiểm tra logs & văn bằng', link: '/admin/logs', icon: Clipboard }
+		{ key: 'logs', label: 'Kiểm tra logs & văn bằng', link: '/admin/log', icon: Clipboard }
 	];
 </script>
 

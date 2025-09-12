@@ -134,7 +134,7 @@
 	{/if}
 
 	{#if openForm}
-		<div class="bg-opacity-40 fixed inset-0 flex items-center justify-center bg-black">
+		<div class="fixed inset-0 flex items-center justify-center bg-black/40">
 			<div class="w-[480px] rounded-lg bg-white p-6 shadow-lg">
 				<h3 class="mb-4 flex items-center gap-2 text-lg font-bold">
 					{#if editingUser}
@@ -153,7 +153,7 @@
 	{/if}
 
 	{#if viewingUser}
-		<div class="bg-opacity-40 fixed inset-0 flex items-center justify-center bg-black">
+		<div class="fixed inset-0 flex items-center justify-center bg-black/40">
 			<div class="w-[600px] rounded-lg bg-white p-6 shadow-lg">
 				<h3 class="mb-4 flex items-center gap-2 text-lg font-bold">
 					<Eye class="h-5 w-5 text-blue-600" /> Chi tiết người dùng
