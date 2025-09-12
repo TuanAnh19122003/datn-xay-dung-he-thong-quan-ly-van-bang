@@ -28,7 +28,7 @@ class StudentService {
                 }
             ]
         });
-        
+
         return data;
     }
 
@@ -73,23 +73,30 @@ class StudentService {
     }
 
     static async getCertsByStudent(studentId) {
-        const data = await Cert.findOne({
-            where: { id: studentId },
+        const certs = await Cert.findAll({
             include: [
-                {
-                    model: Major,
-                    as: 'major',
-                    attributes: ['id', 'name']
-                },
                 {
                     model: Student,
                     as: 'student',
-                    attributes: ['id', 'lastname', 'firstname']
+                    attributes: ['id', 'code', 'lastname', 'firstname'],
+                    where: { code: studentCode }, // lọc theo mã sinh viên
+                    include: [
+                        {
+                            model: Major,
+                            as: 'major',
+                            attributes: ['id', 'name']
+                        }
+                    ]
+                },
+                {
+                    model: Template,
+                    as: 'template',
+                    attributes: ['id', 'name']
                 }
             ]
         });
-
-        return data
+        
+        return certs
     }
 
 }

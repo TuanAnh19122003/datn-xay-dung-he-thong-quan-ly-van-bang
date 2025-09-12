@@ -1,6 +1,7 @@
 <script>
 	import StudentList from './StudentList.svelte';
 	import StudentForm from './StudentForm.svelte';
+	import CertListModal from './CertListModal.svelte';
 	import axios from 'axios';
 	import { onMount } from 'svelte';
 	import { Plus, Pencil, Eye } from 'lucide-svelte';
@@ -14,6 +15,10 @@
 	let viewingStudent = null;
 	let loading = false;
 
+	// Modal chứng chỉ
+	let openCertsModal = false;
+	let selectedStudentCode = null;
+
 	const API_URL = import.meta.env.VITE_API_URL;
 
 	function getAuthHeader() {
@@ -21,6 +26,7 @@
 		return token ? { Authorization: `Bearer ${token}` } : {};
 	}
 
+	// Lấy danh sách sinh viên
 	async function fetchData(page = 1, pageSize = 5, keyword = search) {
 		loading = true;
 		try {
@@ -33,7 +39,7 @@
 				response = await axios.get(`${API_URL}/students`, { params: { page, pageSize } });
 			}
 
-			// Normalize data so major always exists
+			// Chuẩn hóa dữ liệu major
 			students = response.data.data.map(student => {
 				return {
 					...student,
@@ -55,6 +61,7 @@
 
 	onMount(fetchData);
 
+	// Form Thêm/Cập nhật
 	function handleAdd() {
 		editingStudent = null;
 		openForm = true;
@@ -63,24 +70,6 @@
 		editingStudent = student;
 		openForm = true;
 	}
-	function handleView(student) {
-		viewingStudent = student;
-	}
-
-	async function handleDelete(id) {
-		try {
-			await axios.delete(`${API_URL}/students/${id}`, { headers: getAuthHeader() });
-			const newPage =
-				students.length === 1 && pagination.current > 1
-					? pagination.current - 1
-					: pagination.current;
-			await fetchData(newPage, pagination.pageSize);
-			toast.success('Xóa thành công');
-		} catch {
-			toast.error('Xóa thất bại');
-		}
-	}
-
 	async function handleSubmit(student) {
 		try {
 			const formData = new FormData();
@@ -106,12 +95,37 @@
 		}
 	}
 
+	// Xem chi tiết
+	function handleView(student) {
+		viewingStudent = student;
+	}
+
+	// Xóa sinh viên
+	async function handleDelete(id) {
+		try {
+			await axios.delete(`${API_URL}/students/${id}`, { headers: getAuthHeader() });
+			const newPage =
+				students.length === 1 && pagination.current > 1
+					? pagination.current - 1
+					: pagination.current;
+			await fetchData(newPage, pagination.pageSize);
+			toast.success('Xóa thành công');
+		} catch {
+			toast.error('Xóa thất bại');
+		}
+	}
+
+	// Xem chứng chỉ
+	function handleViewCerts(code) {
+		selectedStudentCode = code;
+		openCertsModal = true;
+	}
+
 	const genderMap = {
 		male: 'Nam',
 		female: 'Nữ',
 		other: 'Khác'
 	};
-
 	function displayGender(gender) {
 		return genderMap[gender] || '-';
 	}
@@ -150,27 +164,28 @@
 			on:edit={(e) => handleEdit(e.detail)}
 			on:view={(e) => handleView(e.detail)}
 			on:delete={(e) => handleDelete(e.detail)}
+			on:viewCerts={(e) => handleViewCerts(e.detail)}
 			on:pageChange={(e) => fetchData(e.detail, pagination.pageSize)}
 		/>
 	{/if}
 
+	<!-- Modal Thêm/Cập nhật -->
 	{#if openForm}
 		<div class="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black/40 p-4">
 			<div class="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
 				<h3 class="mb-4 text-lg font-bold">
 					{editingStudent ? 'Cập nhật sinh viên' : 'Thêm sinh viên'}
 				</h3>
-
 				<StudentForm
 					initialValues={editingStudent || {}}
 					on:submit={(e) => handleSubmit(e.detail)}
 					on:cancel={() => (openForm = false)}
 				/>
-
 			</div>
 		</div>
 	{/if}
 
+	<!-- Modal Chi tiết sinh viên -->
 	{#if viewingStudent}
 		<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
 			<div class="w-full max-w-3xl overflow-hidden rounded-xl bg-white shadow-xl">
@@ -185,9 +200,7 @@
 						Đóng
 					</button>
 				</div>
-
 				<div class="grid grid-cols-1 gap-6 p-6 md:grid-cols-3">
-					<!-- Ảnh sinh viên -->
 					<div class="flex justify-center md:justify-start">
 						{#if viewingStudent.image}
 							<img
@@ -201,8 +214,6 @@
 							</div>
 						{/if}
 					</div>
-
-					<!-- Thông tin chi tiết -->
 					<div class="space-y-3 text-gray-700 md:col-span-2">
 						<div class="flex justify-between"><span class="font-medium">Mã SV:</span><span>{viewingStudent.code}</span></div>
 						<div class="flex justify-between"><span class="font-medium">Họ tên:</span><span>{viewingStudent.lastname} {viewingStudent.firstname}</span></div>
@@ -216,11 +227,17 @@
 						<div class="flex justify-between"><span class="font-medium">Ngày cập nhật:</span><span>{new Date(viewingStudent.updatedAt).toLocaleString()}</span></div>
 					</div>
 				</div>
-
 				<div class="flex justify-end px-6 pb-6">
 					<button class="rounded-lg bg-gray-200 px-4 py-2 hover:bg-gray-300" on:click={() => (viewingStudent = null)}>Đóng</button>
 				</div>
 			</div>
 		</div>
 	{/if}
+
+	<!-- Modal Xem chứng chỉ -->
+	<CertListModal
+		open={openCertsModal}
+		studentCode={selectedStudentCode}
+		on:close={() => (openCertsModal = false)}
+	/>
 </div>

@@ -36,6 +36,7 @@
 		const file = e.target.files[0];
 		if (file) {
 			formData.image = file;
+			// tạo URL tạm cho preview
 			filePreview = URL.createObjectURL(file);
 		}
 	}
@@ -60,17 +61,32 @@
 <form class="space-y-4" on:submit|preventDefault={handleSubmit}>
 	<div>
 		<label class="mb-1 block font-medium">Mã sinh viên</label>
-		<input type="text" bind:value={formData.code} class="w-full rounded-lg border px-3 py-2" required />
+		<input
+			type="text"
+			bind:value={formData.code}
+			class="w-full rounded-lg border px-3 py-2"
+			required
+		/>
 	</div>
 
 	<div class="grid grid-cols-2 gap-4">
 		<div>
 			<label class="mb-1 block font-medium">Họ</label>
-			<input type="text" bind:value={formData.lastname} class="w-full rounded-lg border px-3 py-2" required />
+			<input
+				type="text"
+				bind:value={formData.lastname}
+				class="w-full rounded-lg border px-3 py-2"
+				required
+			/>
 		</div>
 		<div>
 			<label class="mb-1 block font-medium">Tên</label>
-			<input type="text" bind:value={formData.firstname} class="w-full rounded-lg border px-3 py-2" required />
+			<input
+				type="text"
+				bind:value={formData.firstname}
+				class="w-full rounded-lg border px-3 py-2"
+				required
+			/>
 		</div>
 	</div>
 
@@ -114,15 +130,25 @@
 	</div>
 
 	<div>
-		<label class="mb-1 block font-medium">Ảnh đại diện</label>
-		<input type="file" accept="image/*" on:change={handleFileChange} />
-		{#if filePreview}
-			<img src={filePreview} alt="Preview" class="mt-2 h-[200px] w-[200px] rounded-[10px] border object-cover" />
-		{/if}
+		<div>
+			<label class="mb-1 block font-medium">Ảnh đại diện</label>
+			<input type="file" accept="image/*" on:change={handleFileChange} />
+			{#if filePreview}
+				<img
+					src={typeof filePreview === 'string' && formData.image instanceof File
+						? filePreview
+						: `http://localhost:5000/${filePreview}`}
+					alt="Preview"
+					class="mt-2 h-[70px] w-[70px] rounded-[10px] border object-cover"
+				/>
+			{/if}
+		</div>
 	</div>
 
 	<div class="flex justify-end gap-3">
-		<button type="button" class="rounded-lg bg-gray-200 px-4 py-2" on:click={handleCancel}>Hủy</button>
+		<button type="button" class="rounded-lg bg-gray-200 px-4 py-2" on:click={handleCancel}
+			>Hủy</button
+		>
 		<button type="submit" class="rounded-lg bg-blue-600 px-4 py-2 text-white">Lưu</button>
 	</div>
 </form>

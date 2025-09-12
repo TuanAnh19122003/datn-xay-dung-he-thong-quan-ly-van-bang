@@ -1,6 +1,6 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
-	import { Eye, Pencil, Trash2, ChevronLeft, ChevronRight } from 'lucide-svelte';
+	import { Eye, Pencil, Trash2, FileText, ChevronLeft, ChevronRight } from 'lucide-svelte';
 
 	export let data = [];
 	export let pagination = { current: 1, pageSize: 5, total: 0 };
@@ -33,6 +33,9 @@
 	}
 	function handleDelete(id) {
 		if (confirm('Bạn có chắc chắn muốn xóa sinh viên này?')) dispatch('delete', id);
+	}
+	function handleViewCerts(student) {
+		dispatch('viewCerts', student.code); // gửi code sinh viên
 	}
 
 	const genderMap = {
@@ -94,16 +97,32 @@
 						<div class="flex justify-center gap-2">
 							<button
 								class="rounded-lg bg-gray-100 p-2 hover:bg-gray-200"
-								on:click={() => handleView(student)}><Eye class="h-4 w-4" /></button
+								on:click={() => handleView(student)}
+								title="Chi tiết"
 							>
+								<Eye class="h-4 w-4" />
+							</button>
 							<button
 								class="rounded-lg bg-blue-500 p-2 text-white hover:bg-blue-600"
-								on:click={() => handleEdit(student)}><Pencil class="h-4 w-4" /></button
+								on:click={() => handleEdit(student)}
+								title="Chỉnh sửa"
 							>
+								<Pencil class="h-4 w-4" />
+							</button>
 							<button
 								class="rounded-lg bg-red-500 p-2 text-white hover:bg-red-600"
-								on:click={() => handleDelete(student.id)}><Trash2 class="h-4 w-4" /></button
+								on:click={() => handleDelete(student.id)}
+								title="Xóa"
 							>
+								<Trash2 class="h-4 w-4" />
+							</button>
+							<button
+								class="rounded-lg bg-green-500 p-2 text-white hover:bg-green-600"
+								on:click={() => handleViewCerts(student)}
+								title="Xem chứng chỉ"
+							>
+								<FileText class="h-4 w-4" />
+							</button>
 						</div>
 					</td>
 				</tr>

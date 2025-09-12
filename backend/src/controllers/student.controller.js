@@ -1,4 +1,5 @@
 const StudentService = require('../services/student.service');
+const { Cert, Student, Major, Template } = require('../models');
 const studentSearch = require('../meilisearch/student.search');
 
 class StudentController {
@@ -99,10 +100,32 @@ async findAll(req, res) {
         }
     }
 
-    async getCertsByStudent(req, res) {
+    async getCertsByStudentCode(req, res) {
         try {
-            const studentId = req.params.id;
-            const certs = await StudentService.getCertsByStudent(studentId);
+            const studentCode = req.params.code;
+
+            const certs = await Cert.findAll({
+                include: [
+                    {
+                        model: Student,
+                        as: 'student',
+                        attributes: ['id', 'code', 'lastname', 'firstname'],
+                        where: { code: studentCode },
+                        include: [
+                            {
+                                model: Major,
+                                as: 'major',
+                                attributes: ['id', 'name']
+                            }
+                        ]
+                    },
+                    {
+                        model: Template,
+                        as: 'template',
+                        attributes: ['id', 'name']
+                    }
+                ]
+            });
 
             return res.status(200).json({
                 success: true,
