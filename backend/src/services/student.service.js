@@ -2,10 +2,24 @@ const Student = require('../models/student.model');
 const Cert = require('../models/cert.model');
 const Major = require('../models/major.model');
 const studentSearch = require('../meilisearch/student.search');
+const path = require('path');
+const fs = require('fs');
 
 class StudentService {
-    static async findAll() {
-        const data = Student.findAll({
+    static async findAll(options = {}) {
+        const { offset, limit } = options;
+
+        const queryOptions = {
+            order: [['createdAt', 'ASC']]
+        };
+
+        if (offset !== undefined && limit !== undefined) {
+            queryOptions.offset = offset;
+            queryOptions.limit = limit;
+        }
+
+        const data = Student.findAndCountAll({
+            ...queryOptions,
             include: [
                 {
                     model: require('../models/major.model'),
@@ -14,6 +28,7 @@ class StudentService {
                 }
             ]
         });
+        
         return data;
     }
 

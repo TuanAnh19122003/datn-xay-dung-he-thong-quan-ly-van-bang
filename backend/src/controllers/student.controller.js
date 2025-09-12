@@ -2,18 +2,41 @@ const StudentService = require('../services/student.service');
 const studentSearch = require('../meilisearch/student.search');
 
 class StudentController {
-    async findAll(req, res) {
+async findAll(req, res) {
         try {
-            const data = await StudentService.findAll();
+            const page = parseInt(req.query.page);
+            const pageSize = parseInt(req.query.pageSize);
+
+            let result;
+
+            if (!page || !pageSize) {
+                // Không phân trang
+                result = await StudentService.findAll();
+                return res.status(200).json({
+                    success: true,
+                    message: 'Lấy danh sách thành công',
+                    data: result.rows,
+                    total: result.count
+                });
+            }
+
+            const offset = (page - 1) * pageSize;
+            result = await StudentService.findAll({ offset, limit: pageSize });
+
             res.status(200).json({
                 success: true,
-                message: 'Lấy dữ liệu thành công',
-                data
-            })
+                message: 'Lấy danh sách thành công',
+                data: result.rows,
+                total: result.count,
+                page,
+                pageSize
+            });
         } catch (error) {
             res.status(500).json({
-                message: error.message
-            })
+                success: false,
+                message: 'Đã xảy ra lỗi khi lấy danh sách',
+                error: error.message
+            });
         }
     }
 

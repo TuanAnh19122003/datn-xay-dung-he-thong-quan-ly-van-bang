@@ -34,7 +34,7 @@
 		{ key: 'faculty', label: 'Khoa', link: '/admin/department', icon: Home },
 		{ key: 'major', label: 'Chuyên ngành', link: '/admin/major', icon: Book },
 		{ key: 'template', label: 'Template', link: '/admin/template', icon: FileText },
-		{ key: 'student', label: 'Sinh viên', link: '/admin/students', icon: GraduationCap },
+		{ key: 'student', label: 'Sinh viên', link: '/admin/student', icon: GraduationCap },
 		{ key: 'certs', label: 'Quản lý văn bằng', link: '/admin/cert', icon: Award  },
 		{ key: 'logs', label: 'Kiểm tra logs & văn bằng', link: '/admin/log', icon: Clipboard }
 	];
