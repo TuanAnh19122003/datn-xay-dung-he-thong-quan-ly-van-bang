@@ -39,6 +39,7 @@ class UserController {
             });
         }
     }
+
     async create(req, res) {
         try {
             const data = await UserService.create(req.body, req.file);
@@ -98,7 +99,7 @@ class UserController {
         }
     }
 
-async search(req, res) {
+    async search(req, res) {
         try {
             const q = req.query.q || '';
             const page = parseInt(req.query.page) || 1;

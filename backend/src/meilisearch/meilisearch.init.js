@@ -3,6 +3,7 @@ const certSearch = require('./cert.search');
 const roleSearch = require('./role.search');
 const userSearch = require('./user.search');
 const departmentSearch = require('./department.search');
+const majorSearch = require('./major.search');
 
 async function initMeilisearch() {
     try {
@@ -11,6 +12,7 @@ async function initMeilisearch() {
         await roleSearch.init();
         await userSearch.init();
         await departmentSearch.init();
+        await majorSearch.init();
         console.log('Meilisearch index đã được khởi tạo và đồng bộ.');
     } catch (err) {
         console.error('Khởi tạo Meilisearch thất bại:');
