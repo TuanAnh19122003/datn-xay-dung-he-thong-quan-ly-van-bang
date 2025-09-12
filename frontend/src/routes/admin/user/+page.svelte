@@ -58,8 +58,13 @@
 	async function handleDelete(id) {
 		try {
 			await axios.delete(`${API_URL}/users/${id}`, { headers: getAuthHeader() });
-			toast.success('Xóa user thành công');
-			fetchData(pagination.current, pagination.pageSize);
+			const newPage =
+				users.length === 1 && pagination.current > 1
+					? pagination.current - 1
+					: pagination.current;
+
+			await fetchData(newPage, pagination.pageSize);
+            toast.success('Xóa thành công');
 		} catch {
 			toast.error('Xóa thất bại');
 		}

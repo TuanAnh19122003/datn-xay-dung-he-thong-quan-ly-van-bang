@@ -30,7 +30,7 @@
 	const menuItems = [
 		{ key: 'user-management', label: 'Quản lý người dùng', link: '/admin/user', icon: User },
 		{ key: 'role-management', label: 'Quản lý vai trò', link: '/admin/role', icon: Shield },
-		{ key: 'faculty', label: 'Khoa', link: '/admin/faculty', icon: Home },
+		{ key: 'faculty', label: 'Khoa', link: '/admin/department', icon: Home },
 		{ key: 'major', label: 'Chuyên ngành', link: '/admin/major', icon: Book },
 		{ key: 'template', label: 'Template', link: '/admin/template', icon: FileText },
 		{ key: 'student', label: 'Sinh viên', link: '/admin/students', icon: GraduationCap },

@@ -1,17 +1,17 @@
 <script>
-	import RoleList from './RoleList.svelte';
-	import RoleForm from './RoleForm.svelte';
+	import DepartmentForm from './DepartmentForm.svelte';
+	import DepartmentList from './DepartmentList.svelte';
 	import axios from 'axios';
 	import { onMount } from 'svelte';
 	import { Plus, Pencil, Eye, Loader2, Inbox } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 
-	let roles = [];
+	let departments = [];
 	let pagination = { current: 1, pageSize: 5, total: 0 };
 	let search = '';
 	let openForm = false;
-	let editingRole = null;
-	let viewingRole = null;
+	let editingDepartment = null;
+	let viewingDepartment = null;
 	let loading = false;
 
 	const API_URL = import.meta.env.VITE_API_URL;
@@ -27,21 +27,21 @@
 			let response;
 
 			if (keyword && keyword.trim() !== '') {
-				response = await axios.get(`${API_URL}/roles/search`, {
+				response = await axios.get(`${API_URL}/departments/search`, {
 					params: { q: keyword, page, pageSize }
 				});
 			} else {
-				response = await axios.get(`${API_URL}/roles`, {
+				response = await axios.get(`${API_URL}/departments`, {
 					params: { page, pageSize }
 				});
 			}
 
 			const { data, total } = response.data;
-			roles = data;
+			departments = data;
 			pagination = { current: page, pageSize, total };
 		} catch (e) {
 			console.error(e);
-			toast.error('Lỗi khi tải danh sách vai trò!');
+			toast.error('Lỗi khi tải danh sách khoa!');
 		} finally {
 			loading = false;
 		}
@@ -50,46 +50,46 @@
 	onMount(fetchData);
 
 	function handleAdd() {
-		editingRole = null;
+		editingDepartment = null;
 		openForm = true;
 	}
-	function handleEdit(role) {
-		editingRole = role;
+	function handleEdit(department) {
+		editingDepartment = department;
 		openForm = true;
 	}
-	function handleView(role) {
-		viewingRole = role;
+	function handleView(department) {
+		viewingDepartment = department;
 	}
 
 	async function handleDelete(id) {
 		try {
-			await axios.delete(`${API_URL}/roles/${id}`, {
+			await axios.delete(`${API_URL}/departments/${id}`, {
 				headers: getAuthHeader()
 			});
 			const newPage =
-				roles.length === 1 && pagination.current > 1
+				departments.length === 1 && pagination.current > 1
 					? pagination.current - 1
 					: pagination.current;
 
 			await fetchData(newPage, pagination.pageSize);
-			toast.success('Xóa thành công');
+            toast.success('Xóa thành công');
 		} catch {
 			toast.error('Thao tác thất bại');
 		}
 	}
 
-	async function handleSubmit(role) {
+	async function handleSubmit(department) {
 		try {
-			if (editingRole) {
-				await axios.put(`${API_URL}/roles/${editingRole.id}`, role, {
+			if (editingDepartment) {
+				await axios.put(`${API_URL}/departments/${editingDepartment.id}`, department, {
 					headers: getAuthHeader()
 				});
-				toast.success('Cập nhật vai trò thành công');
+				toast.success('Cập nhật khoa thành công');
 			} else {
-				await axios.post(`${API_URL}/roles`, role, {
+				await axios.post(`${API_URL}/departments`, department, {
 					headers: getAuthHeader()
 				});
-				toast.success('Thêm vai trò thành công');
+				toast.success('Thêm khoa thành công');
 			}
 
 			openForm = false;
@@ -112,11 +112,11 @@
 					d="M3 7h18M3 12h18M3 17h18"
 				/>
 			</svg>
-			Danh sách vai trò
+			Danh sách khoa
 		</h2>
 		<div class="flex gap-3">
 			<input
-				placeholder="Tìm kiếm vai trò..."
+				placeholder="Tìm kiếm khoa..."
 				bind:value={search}
 				on:input={() => fetchData(1, pagination.pageSize, search)}
 				class="w-64 rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
@@ -134,8 +134,8 @@
 	{#if loading}
 		<div class="py-10 text-center text-gray-500">Đang tải...</div>
 	{:else}
-		<RoleList
-			data={roles}
+		<DepartmentList
+			data={departments}
 			{pagination}
 			on:edit={(e) => handleEdit(e.detail)}
 			on:view={(e) => handleView(e.detail)}
@@ -149,14 +149,14 @@
 		<div class="fixed inset-0 flex items-center justify-center bg-black/40">
 			<div class="animate-fade-in w-[420px] rounded-lg bg-white p-6 shadow-lg">
 				<h3 class="mb-4 flex items-center gap-2 text-lg font-bold">
-					{#if editingRole}
-						<Pencil class="h-5 w-5 text-blue-600" /> Cập nhật vai trò
+					{#if editingDepartment}
+						<Pencil class="h-5 w-5 text-blue-600" /> Cập nhật khoa
 					{:else}
-						<Plus class="h-5 w-5 text-blue-600" /> Thêm vai trò
+						<Plus class="h-5 w-5 text-blue-600" /> Thêm khoa
 					{/if}
 				</h3>
-				<RoleForm
-					initialValues={editingRole}
+				<DepartmentForm
+					initialValues={editingDepartment}
 					on:submit={(e) => handleSubmit(e.detail)}
 					on:cancel={() => (openForm = false)}
 				/>
@@ -165,22 +165,25 @@
 	{/if}
 
 	<!-- Modal View -->
-	{#if viewingRole}
+	{#if viewingDepartment}
 		<div class="fixed inset-0 flex items-center justify-center bg-black/40">
 			<div class="animate-fade-in w-[420px] rounded-lg bg-white p-6 shadow-lg">
 				<h3 class="mb-4 flex items-center gap-2 text-lg font-bold">
-					<Eye class="h-5 w-5 text-blue-600" /> Chi tiết vai trò
+					<Eye class="h-5 w-5 text-blue-600" /> Chi tiết khoa
 				</h3>
 				<div class="space-y-2 text-gray-700">
-					<p><strong>ID:</strong> {viewingRole.id}</p>
-					<p><strong>Tên vai trò:</strong> {viewingRole.name}</p>
-					<p><strong>Ngày tạo:</strong> {new Date(viewingRole.createdAt).toLocaleString()}</p>
-					<p><strong>Ngày cập nhật:</strong> {new Date(viewingRole.updatedAt).toLocaleString()}</p>
+					<p><strong>ID:</strong> {viewingDepartment.id}</p>
+					<p><strong>Tên khoa:</strong> {viewingDepartment.name}</p>
+					<p><strong>Ngày tạo:</strong> {new Date(viewingDepartment.createdAt).toLocaleString()}</p>
+					<p>
+						<strong>Ngày cập nhật:</strong>
+						{new Date(viewingDepartment.updatedAt).toLocaleString()}
+					</p>
 				</div>
 				<div class="mt-4 text-right">
 					<button
 						class="rounded-lg bg-gray-200 px-4 py-2 hover:bg-gray-300"
-						on:click={() => (viewingRole = null)}
+						on:click={() => (viewingDepartment = null)}
 					>
 						Đóng
 					</button>
