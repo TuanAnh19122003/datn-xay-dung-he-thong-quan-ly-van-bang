@@ -31,9 +31,15 @@
 						headers: getAuthHeader()
 					});
 
-			const { data, total } = response.data;
-			logs = data;
-			pagination = { current: page, pageSize, total };
+			// Chuẩn hóa userName
+			logs = response.data.data.map((log) => ({
+				...log,
+				displayUserName: log.user
+					? `${log.user.lastname || ''} ${log.user.firstname || ''}`.trim()
+					: log.userName || log.userId
+			}));
+
+			pagination = { current: page, pageSize, total: response.data.total ?? logs.length };
 		} catch (err) {
 			console.error(err);
 			toast.error('Lỗi khi tải log!');
@@ -81,7 +87,7 @@
 				</h3>
 				<div class="space-y-2 text-gray-700">
 					<p><strong>ID:</strong> {viewingLog.id}</p>
-					<p><strong>User:</strong> {viewingLog.user ? `${viewingLog.user.lastname} ${viewingLog.user.firstname}` : viewingLog.userId}</p>
+					<p><strong>User:</strong> {viewingLog.displayUserName}</p>
 					<p><strong>Hành động:</strong> {viewingLog.action}</p>
 					<p><strong>Target:</strong> {viewingLog.targetType} - {viewingLog.targetId}</p>
 					<p><strong>IP:</strong> {viewingLog.ip}</p>

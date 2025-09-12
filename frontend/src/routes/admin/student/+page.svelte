@@ -32,9 +32,20 @@
 			} else {
 				response = await axios.get(`${API_URL}/students`, { params: { page, pageSize } });
 			}
-			const { data, total } = response.data;
-			students = data;
-			pagination = { current: page, pageSize, total };
+
+			// Normalize data so major always exists
+			students = response.data.data.map(student => {
+				return {
+					...student,
+					major: student.major || (student.majorName ? { name: student.majorName, code: student.majorCode } : null)
+				};
+			});
+
+			pagination = {
+				current: page,
+				pageSize,
+				total: response.data.total ?? students.length
+			};
 		} catch (e) {
 			toast.error('Lỗi khi tải danh sách sinh viên!');
 		} finally {
@@ -110,12 +121,7 @@
 	<div class="flex items-center justify-between">
 		<h2 class="flex items-center gap-2 text-2xl font-semibold">
 			<svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M3 7h18M3 12h18M3 17h18"
-				/>
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18"/>
 			</svg>
 			Danh sách sinh viên
 		</h2>
@@ -190,9 +196,7 @@
 								class="h-50 w-50 rounded-xl border object-cover shadow"
 							/>
 						{:else}
-							<div
-								class="flex h-48 w-48 items-center justify-center rounded-xl bg-gray-200 text-gray-500 shadow"
-							>
+							<div class="flex h-48 w-48 items-center justify-center rounded-xl bg-gray-200 text-gray-500 shadow">
 								No Image
 							</div>
 						{/if}
@@ -200,62 +204,21 @@
 
 					<!-- Thông tin chi tiết -->
 					<div class="space-y-3 text-gray-700 md:col-span-2">
-						<div class="flex justify-between">
-							<span class="font-medium">Mã SV:</span>
-							<span>{viewingStudent.code}</span>
-						</div>
-						<div class="flex justify-between">
-							<span class="font-medium">Họ tên:</span>
-							<span>{viewingStudent.lastname} {viewingStudent.firstname}</span>
-						</div>
-						<div class="flex justify-between">
-							<span class="font-medium">Email:</span>
-							<span>{viewingStudent.email || '-'}</span>
-						</div>
-						<div class="flex justify-between">
-							<span class="font-medium">SĐT:</span>
-							<span>{viewingStudent.phone || '-'}</span>
-						</div>
-						<div class="flex justify-between">
-							<span class="font-medium">Ngày sinh:</span>
-							<span
-								>{viewingStudent.dob
-									? new Date(viewingStudent.dob).toLocaleDateString()
-									: '-'}</span
-							>
-						</div>
-						<div class="flex justify-between">
-							<span class="font-medium">Giới tính:</span>
-							<span>{displayGender(viewingStudent.gender)}</span>
-						</div>
-						<div class="flex justify-between">
-							<span class="font-medium">Địa chỉ:</span>
-							<span>{viewingStudent.address || '-'}</span>
-						</div>
-						<div class="flex justify-between">
-							<span class="font-medium">Ngành học:</span>
-							<span
-								>{viewingStudent.major ? viewingStudent.major.name : viewingStudent.majorId}</span
-							>
-						</div>
-						<div class="flex justify-between">
-							<span class="font-medium">Ngày tạo:</span>
-							<span>{new Date(viewingStudent.createdAt).toLocaleString()}</span>
-						</div>
-						<div class="flex justify-between">
-							<span class="font-medium">Ngày cập nhật:</span>
-							<span>{new Date(viewingStudent.updatedAt).toLocaleString()}</span>
-						</div>
+						<div class="flex justify-between"><span class="font-medium">Mã SV:</span><span>{viewingStudent.code}</span></div>
+						<div class="flex justify-between"><span class="font-medium">Họ tên:</span><span>{viewingStudent.lastname} {viewingStudent.firstname}</span></div>
+						<div class="flex justify-between"><span class="font-medium">Email:</span><span>{viewingStudent.email || '-'}</span></div>
+						<div class="flex justify-between"><span class="font-medium">SĐT:</span><span>{viewingStudent.phone || '-'}</span></div>
+						<div class="flex justify-between"><span class="font-medium">Ngày sinh:</span><span>{viewingStudent.dob ? new Date(viewingStudent.dob).toLocaleDateString() : '-'}</span></div>
+						<div class="flex justify-between"><span class="font-medium">Giới tính:</span><span>{displayGender(viewingStudent.gender)}</span></div>
+						<div class="flex justify-between"><span class="font-medium">Địa chỉ:</span><span>{viewingStudent.address || '-'}</span></div>
+						<div class="flex justify-between"><span class="font-medium">Ngành học:</span><span>{viewingStudent.major?.name || '-'}</span></div>
+						<div class="flex justify-between"><span class="font-medium">Ngày tạo:</span><span>{new Date(viewingStudent.createdAt).toLocaleString()}</span></div>
+						<div class="flex justify-between"><span class="font-medium">Ngày cập nhật:</span><span>{new Date(viewingStudent.updatedAt).toLocaleString()}</span></div>
 					</div>
 				</div>
 
 				<div class="flex justify-end px-6 pb-6">
-					<button
-						class="rounded-lg bg-gray-200 px-4 py-2 hover:bg-gray-300"
-						on:click={() => (viewingStudent = null)}
-					>
-						Đóng
-					</button>
+					<button class="rounded-lg bg-gray-200 px-4 py-2 hover:bg-gray-300" on:click={() => (viewingStudent = null)}>Đóng</button>
 				</div>
 			</div>
 		</div>

@@ -8,6 +8,8 @@ const studentSearch = new BaseSearchSyncService(
     [
         'code',
         'image',
+        'dob',
+        'gender',
         'lastname',
         'firstname',
         'email',

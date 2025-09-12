@@ -32,9 +32,14 @@
 			} else {
 				response = await axios.get(`${API_URL}/users`, { params: { page, pageSize } });
 			}
-			const { data, total } = response.data;
-			users = data;
-			pagination = { current: page, pageSize, total };
+
+			// Chuẩn hóa role
+			users = response.data.data.map(user => ({
+				...user,
+				role: user.role || (user.roleName ? { name: user.roleName, code: user.roleCode } : null)
+			}));
+
+			pagination = { current: page, pageSize, total: response.data.total ?? users.length };
 		} catch (e) {
 			toast.error('Lỗi khi tải danh sách user!');
 		} finally {
@@ -100,12 +105,7 @@
 	<div class="flex items-center justify-between">
 		<h2 class="flex items-center gap-2 text-2xl font-semibold">
 			<svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M3 7h18M3 12h18M3 17h18"
-				/>
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18"/>
 			</svg>
 			Danh sách người dùng
 		</h2>
@@ -165,7 +165,6 @@
 				</h3>
 
 				<div class="flex items-start gap-6">
-					<!-- Ảnh bên trái -->
 					{#if viewingUser.image}
 						<img
 							src={`http://localhost:5000/${viewingUser.image}`}
@@ -173,34 +172,24 @@
 							class="h-[200px] w-[200px] rounded-[10px] border object-cover"
 						/>
 					{:else}
-						<div
-							class="flex h-[200px] w-[200px] items-center justify-center rounded-[10px] bg-gray-200 text-gray-500"
-						>
+						<div class="flex h-[200px] w-[200px] items-center justify-center rounded-[10px] bg-gray-200 text-gray-500">
 							No Image
 						</div>
 					{/if}
 
-					<!-- Thông tin bên phải -->
 					<div class="flex-1 space-y-2 text-gray-700">
 						<p><strong>Họ tên:</strong> {viewingUser.lastname} {viewingUser.firstname}</p>
 						<p><strong>Email:</strong> {viewingUser.email}</p>
 						<p><strong>SĐT:</strong> {viewingUser.phone || '-'}</p>
+						<p><strong>Vai trò:</strong> {viewingUser.role?.name || '-'}</p>
 						<p><strong>Trạng thái:</strong> {viewingUser.is_active ? 'Kích hoạt' : 'Khoá'}</p>
 						<p><strong>Ngày tạo:</strong> {new Date(viewingUser.createdAt).toLocaleString()}</p>
-						<p>
-							<strong>Ngày cập nhật:</strong>
-							{new Date(viewingUser.updatedAt).toLocaleString()}
-						</p>
+						<p><strong>Ngày cập nhật:</strong> {new Date(viewingUser.updatedAt).toLocaleString()}</p>
 					</div>
 				</div>
 
 				<div class="mt-6 text-right">
-					<button
-						class="rounded-lg bg-gray-200 px-4 py-2 hover:bg-gray-300"
-						on:click={() => (viewingUser = null)}
-					>
-						Đóng
-					</button>
+					<button class="rounded-lg bg-gray-200 px-4 py-2 hover:bg-gray-300" on:click={() => (viewingUser = null)}>Đóng</button>
 				</div>
 			</div>
 		</div>

@@ -28,6 +28,14 @@
 	function handleView(log) {
 		dispatch('view', log);
 	}
+
+	// Chuẩn hóa hiển thị tên user ngay trong component
+	const getUserName = (log) => {
+		if (log.user) return `${log.user.lastname || ''} ${log.user.firstname || ''}`.trim();
+		if (log.displayUserName) return log.displayUserName;
+		if (log.userName) return log.userName;
+		return log.userId;
+	};
 </script>
 
 <table class="w-full border-collapse overflow-hidden rounded-lg text-sm">
@@ -47,9 +55,7 @@
 				<td class="px-4 py-3 text-center">
 					{(pagination.current - 1) * pagination.pageSize + index + 1}
 				</td>
-				<td class="px-4 py-3">
-					{log.user ? `${log.user.lastname} ${log.user.firstname}` : log.userId}
-				</td>
+				<td class="px-4 py-3">{getUserName(log)}</td>
 				<td class="px-4 py-3">{log.action}</td>
 				<td class="px-4 py-3">{log.targetType} - {log.targetId}</td>
 				<td class="px-4 py-3">{new Date(log.createdAt).toLocaleString()}</td>

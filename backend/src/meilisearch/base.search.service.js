@@ -16,11 +16,12 @@ class BaseSearchSyncService {
         this.include.forEach(rel => {
             if (rel.as === 'student') {
                 allFields.push('studentName', 'studentCode');
+            } else if (rel.as === 'user') {
+                allFields.push('userName', 'userId');
             } else {
                 allFields.push(`${rel.as}Name`, `${rel.as}Code`);
             }
         });
-
 
         await this.searchService.createIndex(allFields);
 
@@ -36,19 +37,18 @@ class BaseSearchSyncService {
 
             this.include.forEach(rel => {
                 if (i[rel.as]) {
-                    // Nếu là student thì map riêng
                     if (rel.as === 'student') {
                         obj['studentName'] = `${i[rel.as].lastname} ${i[rel.as].firstname}`;
                         obj['studentCode'] = i[rel.as].code;
+                    } else if (rel.as === 'user') {
+                        obj['userId'] = i[rel.as].id;
+                        obj['userName'] = `${i[rel.as].lastname} ${i[rel.as].firstname}`;
                     } else {
-                        // Prefix rõ theo tên quan hệ
                         obj[`${rel.as}Name`] = i[rel.as].name;
                         obj[`${rel.as}Code`] = i[rel.as].code;
                     }
                 }
             });
-
-
             return obj;
         });
 
