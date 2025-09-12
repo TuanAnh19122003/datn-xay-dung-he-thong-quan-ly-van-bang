@@ -2,21 +2,33 @@ const Cert = require('../models/cert.model');
 const certSearch = require('../meilisearch/cert.search');
 
 class CertService {
-    static async findAll() {
-        const data = await Cert.findAll({
+    static async findAll(options = {}) {
+        const { offset, limit } = options;
+
+        const queryOptions = {
+            order: [['createdAt', 'ASC']]
+        };
+
+        if (offset !== undefined && limit !== undefined) {
+            queryOptions.offset = offset;
+            queryOptions.limit = limit;
+        }
+        const data = await Cert.findAndCountAll({
+            ...queryOptions,
             include: [
                 {
                     model: require('../models/student.model'),
                     as: 'student',
-                    attributes: ['lastname', 'firstname', 'code']
+                    attributes: ['id','lastname', 'firstname', 'code']
                 },
                 {
                     model: require('../models/template.model'),
                     as: 'template',
-                    attributes: ['name']
+                    attributes: ['id','name']
                 }
             ]
         });
+        
         return data
     }
 

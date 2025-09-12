@@ -4,17 +4,39 @@ const certSearch = require('../meilisearch/cert.search');
 class CertController {
     async findAll(req, res) {
         try {
-            const data = await CertService.findAll();
+            const page = parseInt(req.query.page);
+            const pageSize = parseInt(req.query.pageSize);
+
+            let result;
+
+            if (!page || !pageSize) {
+                // Không phân trang
+                result = await CertService.findAll();
+                return res.status(200).json({
+                    success: true,
+                    message: 'Lấy danh sách thành công',
+                    data: result.rows,
+                    total: result.count
+                });
+            }
+
+            const offset = (page - 1) * pageSize;
+            result = await CertService.findAll({ offset, limit: pageSize });
+
             res.status(200).json({
                 success: true,
-                message: 'Lấy dữ liệu thành công',
-                data
+                message: 'Lấy danh sách người dùng thành công',
+                data: result.rows,
+                total: result.count,
+                page,
+                pageSize
             });
         } catch (error) {
             res.status(500).json({
                 success: false,
-                message: error.message
-            })
+                message: 'Đã xảy ra lỗi khi lấy danh sách người dùng',
+                error: error.message
+            });
         }
     }
 
@@ -27,6 +49,7 @@ class CertController {
                 data
             })
         } catch (error) {
+            console.error('❌ Lỗi khi thêm chứng chỉ:', error);
             res.status(500).json({
                 success: false,
                 message: error.message
