@@ -13,6 +13,8 @@ const db = require('./src/models/index');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'src', 'uploads')));
+app.use('/static', express.static(path.join(__dirname, 'public')));
+app.use('/outputs', express.static(path.join(__dirname, 'src', 'outputs')));
 
 const apiRouter = require('./src/routes/index');
 

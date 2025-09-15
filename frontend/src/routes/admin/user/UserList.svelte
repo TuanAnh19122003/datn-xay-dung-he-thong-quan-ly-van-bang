@@ -66,7 +66,7 @@
 							<img
 								src={`http://localhost:5000/${user.image}`}
 								alt="avatar"
-								class="h-[100px] w-[100px] rounded-[10px] border object-cover"
+								class="h-[100px] w-[100px] rounded-[10px] object-cover"
 							/>
 						{:else}
 							<div

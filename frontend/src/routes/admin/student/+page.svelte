@@ -206,7 +206,7 @@
 							<img
 								src={`http://localhost:5000/${viewingStudent.image}`}
 								alt="avatar"
-								class="h-50 w-50 rounded-xl border object-cover shadow"
+								class="h-50 w-50 rounded-xl object-cover shadow"
 							/>
 						{:else}
 							<div class="flex h-48 w-48 items-center justify-center rounded-xl bg-gray-200 text-gray-500 shadow">
@@ -223,6 +223,10 @@
 						<div class="flex justify-between"><span class="font-medium">Giới tính:</span><span>{displayGender(viewingStudent.gender)}</span></div>
 						<div class="flex justify-between"><span class="font-medium">Địa chỉ:</span><span>{viewingStudent.address || '-'}</span></div>
 						<div class="flex justify-between"><span class="font-medium">Ngành học:</span><span>{viewingStudent.major?.name || '-'}</span></div>
+						<div class="flex justify-between">
+							<span class="font-medium">GPA:</span>
+							<span>{viewingStudent.gpa ?? '-'}</span>
+						</div>
 						<div class="flex justify-between"><span class="font-medium">Ngày tạo:</span><span>{new Date(viewingStudent.createdAt).toLocaleString()}</span></div>
 						<div class="flex justify-between"><span class="font-medium">Ngày cập nhật:</span><span>{new Date(viewingStudent.updatedAt).toLocaleString()}</span></div>
 					</div>

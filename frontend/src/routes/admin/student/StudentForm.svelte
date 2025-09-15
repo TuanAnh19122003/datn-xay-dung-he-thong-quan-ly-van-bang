@@ -13,7 +13,8 @@
 		email: '',
 		phone: '',
 		address: '',
-		majorId: ''
+		majorId: '',
+		gpa: ''
 	};
 
 	const dispatch = createEventDispatcher();
@@ -127,6 +128,19 @@
 				<option value={major.id}>{major.name}</option>
 			{/each}
 		</select>
+	</div>
+
+	<div>
+		<label class="mb-1 block font-medium">GPA</label>
+		<input
+			type="number"
+			step="0.01"
+			min="0"
+			max="4"
+			bind:value={formData.gpa}
+			class="w-full rounded-lg border px-3 py-2"
+			placeholder="0.00 - 4.00"
+		/>
 	</div>
 
 	<div>

@@ -48,6 +48,11 @@ const Student = sequelize.define('Student', {
     majorId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+    },
+    gpa: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
+        validate: { min: 0, max: 4.0 }
     }
 }, {
     timestamps: true,

@@ -169,7 +169,7 @@
 						<img
 							src={`http://localhost:5000/${viewingUser.image}`}
 							alt="avatar"
-							class="h-[200px] w-[200px] rounded-[10px] border object-cover"
+							class="h-[200px] w-[200px] rounded-[10px] object-cover"
 						/>
 					{:else}
 						<div class="flex h-[200px] w-[200px] items-center justify-center rounded-[10px] bg-gray-200 text-gray-500">

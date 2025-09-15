@@ -1,5 +1,12 @@
 const Cert = require('../models/cert.model');
 const certSearch = require('../meilisearch/cert.search');
+const fs = require('fs');
+const path = require('path');
+const ejs = require('ejs');
+const { getClassification } = require('../utils/classification');
+const Student = require('../models/student.model');
+const Template = require('../models/template.model');
+const normalizeFileName = require('../utils/normalizeName');
 
 class CertService {
     static async findAll(options = {}) {
@@ -19,16 +26,16 @@ class CertService {
                 {
                     model: require('../models/student.model'),
                     as: 'student',
-                    attributes: ['id','lastname', 'firstname', 'code']
+                    attributes: ['id', 'lastname', 'firstname', 'code']
                 },
                 {
                     model: require('../models/template.model'),
                     as: 'template',
-                    attributes: ['id','name']
+                    attributes: ['id', 'name']
                 }
             ]
         });
-        
+
         return data
     }
 
@@ -55,6 +62,67 @@ class CertService {
         await certSearch.delete(id);
         return true;
     }
+
+    static async print(certId) {
+        const cert = await Cert.findByPk(certId, {
+            include: [
+                { model: Student, as: 'student' },
+                { model: Template, as: 'template' }
+            ]
+        });
+        if (!cert) throw new Error("Không tìm thấy chứng chỉ");
+
+        // ✅ Chỉ cho in khi đã cấp
+        if (cert.status !== 'issued') {
+            throw new Error("Chứng chỉ chưa được phát hành, không thể in");
+        }
+
+        const student = cert.student;
+        if (!student) throw new Error("Không tìm thấy sinh viên");
+
+        const template = cert.template;
+        if (!template) throw new Error("Không tìm thấy template");
+
+        const classification = getClassification(student.gpa);
+
+        // đọc file template HTML
+        const templatePath = path.join(__dirname, '../templates', path.basename(template.fileUrl));
+        const html = fs.readFileSync(templatePath, 'utf8');
+
+        // đọc logo
+        let logoBase64 = null;
+        try {
+            const logoPath = path.join(__dirname, '../public/logo.png');
+            const logoBuffer = fs.readFileSync(logoPath);
+            logoBase64 = `data:image/png;base64,${logoBuffer.toString('base64')}`;
+        } catch (err) {
+            console.warn("Không tìm thấy logo, bỏ qua.");
+        }
+
+        // render với ejs
+        const rendered = ejs.render(html, {
+            fullname: `${student.lastname} ${student.firstname}`,
+            dob: student.dob,
+            gradYear: cert.gradDate ? new Date(cert.gradDate).getFullYear() : '',
+            number: cert.number,
+            classification: classification.vn,
+            classificationEn: classification.en,
+            logoBase64
+        });
+
+        const gradYear = cert.gradDate ? new Date(cert.gradDate).getFullYear() : 'unknown';
+        const rawName = `${student.lastname} ${student.firstname}_${gradYear}_${cert.id}.html`;
+
+        const fileName = normalizeFileName(rawName);
+
+        const outputPath = path.join(__dirname, '../outputs', fileName);
+        fs.writeFileSync(outputPath, rendered, 'utf8');
+
+        await cert.update({ fileUrl: `outputs/${fileName}` });
+
+        return rendered;
+    }
+
 }
 
 module.exports = CertService

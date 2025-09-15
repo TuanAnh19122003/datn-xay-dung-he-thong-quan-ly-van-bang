@@ -62,6 +62,7 @@
 				<th class="px-4 py-3 text-left">Ngày sinh</th>
 				<th class="px-4 py-3 text-left">Giới tính</th>
 				<th class="px-4 py-3 text-left">Ngành học</th>
+				<th class="px-4 py-3 text-left">GPA</th>
 				<th class="px-4 py-3 text-center">Hành động</th>
 			</tr>
 		</thead>
@@ -76,7 +77,7 @@
 							<img
 								src={`http://localhost:5000/${student.image}`}
 								alt="avatar"
-								class="h-[100px] w-[100px] rounded-[10px] border object-cover"
+								class="h-[100px] w-[100px] rounded-[10px] object-cover"
 							/>
 						{:else}
 							<div
@@ -93,6 +94,7 @@
 					<td>{student.dob ? new Date(student.dob).toLocaleDateString() : '-'}</td>
 					<td>{displayGender(student.gender)}</td>
 					<td>{student.major ? student.major.name : student.majorId}</td>
+					<td>{student.gpa ?? '-'}</td>
 					<td class="px-4 py-3 text-center">
 						<div class="flex justify-center gap-2">
 							<button

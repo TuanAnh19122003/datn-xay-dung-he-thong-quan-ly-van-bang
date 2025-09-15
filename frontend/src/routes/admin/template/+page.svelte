@@ -41,7 +41,7 @@
 			pagination = { current: page, pageSize, total };
 		} catch (e) {
 			console.error(e);
-			toast.error('Lỗi khi tải danh sách vai trò!');
+			toast.error('Lỗi khi tải danh sách mẫu văn bằng!');
 		} finally {
 			loading = false;
 		}
@@ -84,12 +84,12 @@
 				await axios.put(`${API_URL}/templates/${editingTemplate.id}`, template, {
 					headers: getAuthHeader()
 				});
-				toast.success('Cập nhật vai trò thành công');
+				toast.success('Cập nhật mẫu văn bằng thành công');
 			} else {
 				await axios.post(`${API_URL}/templates`, template, {
 					headers: getAuthHeader()
 				});
-				toast.success('Thêm vai trò thành công');
+				toast.success('Thêm mẫu văn bằng thành công');
 			}
 
 			openForm = false;
@@ -112,11 +112,11 @@
 					d="M3 7h18M3 12h18M3 17h18"
 				/>
 			</svg>
-			Danh sách vai trò
+			Danh sách mẫu văn bằng
 		</h2>
 		<div class="flex gap-3">
 			<input
-				placeholder="Tìm kiếm vai trò..."
+				placeholder="Tìm kiếm mẫu văn bằng..."
 				bind:value={search}
 				on:input={() => fetchData(1, pagination.pageSize, search)}
 				class="w-64 rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
@@ -150,9 +150,9 @@
 			<div class="animate-fade-in w-[420px] rounded-lg bg-white p-6 shadow-lg">
 				<h3 class="mb-4 flex items-center gap-2 text-lg font-bold">
 					{#if editingTemplate}
-						<Pencil class="h-5 w-5 text-blue-600" /> Cập nhật vai trò
+						<Pencil class="h-5 w-5 text-blue-600" /> Cập nhật mẫu văn bằng
 					{:else}
-						<Plus class="h-5 w-5 text-blue-600" /> Thêm vai trò
+						<Plus class="h-5 w-5 text-blue-600" /> Thêm mẫu văn bằng
 					{/if}
 				</h3>
 				<TemplateForm
@@ -169,7 +169,7 @@
 		<div class="fixed inset-0 flex items-center justify-center bg-black/40">
 			<div class="animate-fade-in w-[420px] rounded-lg bg-white p-6 shadow-lg">
 				<h3 class="mb-4 flex items-center gap-2 text-lg font-bold">
-					<Eye class="h-5 w-5 text-blue-600" /> Chi tiết vai trò
+					<Eye class="h-5 w-5 text-blue-600" /> Chi tiết mẫu văn bằng
 				</h3>
 				<div class="space-y-2 text-gray-700">
 					<p><strong>ID:</strong> {viewingTemplate.id}</p>

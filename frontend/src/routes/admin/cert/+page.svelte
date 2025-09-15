@@ -3,7 +3,7 @@
 	import CertForm from './CertForm.svelte';
 	import axios from 'axios';
 	import { onMount } from 'svelte';
-	import { Plus, Pencil, Eye } from 'lucide-svelte';
+	import { Plus, Pencil, Eye, Printer } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 
 	let certs = [];
@@ -75,14 +75,12 @@
 		}
 	}
 
-	// ✅ Hàm submit đã hoàn chỉnh
 	async function handleSubmit(cert) {
 		try {
 			let payload;
 			let headers = { ...getAuthHeader() };
 
 			if (cert.fileUrl instanceof File) {
-				// Nếu có file upload
 				payload = new FormData();
 				Object.entries(cert).forEach(([key, value]) => {
 					if (value !== null && value !== undefined && value !== '') {
@@ -91,7 +89,6 @@
 				});
 				headers['Content-Type'] = 'multipart/form-data';
 			} else {
-				// Không có file, gửi JSON
 				payload = {};
 				Object.entries(cert).forEach(([key, value]) => {
 					if (value !== null && value !== undefined && value !== '') {
@@ -113,6 +110,10 @@
 			console.error('❌ Lỗi lưu chứng chỉ:', err);
 			toast.error('Lưu thất bại');
 		}
+	}
+
+	function handlePrint(cert) {
+		window.open(`${API_URL}/certs/${cert.id}/print`, '_blank');
 	}
 </script>
 
@@ -154,6 +155,7 @@
 			on:edit={(e) => handleEdit(e.detail)}
 			on:view={(e) => handleView(e.detail)}
 			on:delete={(e) => handleDelete(e.detail)}
+			on:print={(e) => handlePrint(e.detail)}
 			on:pageChange={(e) => fetchData(e.detail, pagination.pageSize)}
 		/>
 	{/if}
@@ -190,45 +192,26 @@
 					<p>
 						<strong>Sinh viên:</strong>
 						{viewingCert.studentName || '-'}
-						{#if viewingCert.studentCode}
-							({viewingCert.studentCode})
-						{/if}
+						{#if viewingCert.studentCode}({viewingCert.studentCode}){/if}
 					</p>
 					<p><strong>Template:</strong> {viewingCert.templateName || '-'}</p>
 					<p><strong>Ngày tốt nghiệp:</strong> {viewingCert.gradDate || '-'}</p>
 					<p><strong>Cơ quan cấp:</strong> {viewingCert.issuer}</p>
 					<p><strong>Trạng thái:</strong> {viewingCert.status}</p>
-
-					{#if viewingCert.fileUrl}
-						<p>
-							<strong>File:</strong>
-							<a
-								href={`${API_URL}/${viewingCert.fileUrl}`}
-								target="_blank"
-								class="text-blue-600 underline"
-							>
-								Xem / tải xuống
-							</a>
-						</p>
-					{/if}
-
-					{#if viewingCert.createdAt}
-						<p><strong>Ngày tạo:</strong> {new Date(viewingCert.createdAt).toLocaleString()}</p>
-					{/if}
-					{#if viewingCert.updatedAt}
-						<p>
-							<strong>Ngày cập nhật:</strong>
-							{new Date(viewingCert.updatedAt).toLocaleString()}
-						</p>
-					{/if}
 				</div>
 
-				<div class="mt-6 text-right">
+				<div class="mt-6 flex justify-between">
 					<button
 						class="rounded-lg bg-gray-200 px-4 py-2 hover:bg-gray-300"
-						on:click={() => (viewingCert = null)}
+						on:click={() => (viewingCert = null)}>Đóng</button
 					>
-						Đóng
+					<button
+						class="flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700 disabled:opacity-50"
+						on:click={() => handlePrint(viewingCert)}
+						disabled={viewingCert.status !== 'issued'}
+					>
+						<Printer class="h-4 w-4" />
+						<span>In chứng chỉ</span>
 					</button>
 				</div>
 			</div>

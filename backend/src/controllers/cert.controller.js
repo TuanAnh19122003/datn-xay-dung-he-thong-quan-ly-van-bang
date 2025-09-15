@@ -25,7 +25,7 @@ class CertController {
 
             res.status(200).json({
                 success: true,
-                message: 'Lấy danh sách người dùng thành công',
+                message: 'Lấy danh sách thành công',
                 data: result.rows,
                 total: result.count,
                 page,
@@ -120,6 +120,17 @@ class CertController {
             res.status(200).json({ success: true, data: results.hits });
         } catch (err) {
             res.status(500).json({ success: false, message: err.message });
+        }
+    }
+
+    async print(req, res) {
+        try {
+            const html = await CertService.print(req.params.id);
+            res.setHeader('Content-Type', 'text/html; charset=utf-8');
+            res.send(html);
+        } catch (error) {
+            console.error("❌ Lỗi khi in chứng chỉ:", error);
+            res.status(500).json({ success: false, message: error.message });
         }
     }
 

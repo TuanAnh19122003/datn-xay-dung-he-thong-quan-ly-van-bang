@@ -14,7 +14,8 @@
         }
 
         .certificate {
-            width: 297mm; /* A4 ngang */
+            width: 297mm;
+            /* A4 ngang */
             height: 210mm;
             background: #fff;
             border: 3px solid #600;
@@ -119,7 +120,7 @@
                 Độc lập – Tự do – Hạnh phúc
             </div>
             <div class="logo">
-                <img src="logo.png" alt="Logo Electric Power University">
+                <img src="<%= logoBase64 %>" alt="Logo Electric Power University">
             </div>
             <div class="title">
                 HIỆU TRƯỞNG<br>
@@ -128,15 +129,15 @@
             </div>
 
             <div class="field center">cho</div>
-            <div class="field">Họ và tên:</div>
-            <div class="field">Ngày sinh:</div>
-            <div class="field">Hình thức đào tạo:</div>
-            <div class="field">Năm tốt nghiệp:</div>
-            <div class="field">Xếp loại tốt nghiệp:</div>
+            <div class="field">Họ và tên: <%= fullname %></div>
+            <div class="field">Ngày sinh: <%= dob %></div>
+            <div class="field">Hình thức đào tạo: full-time</div>
+            <div class="field">Năm tốt nghiệp: <%= gradYear %></div>
+            <div class="field">Xếp loại tốt nghiệp: <b><%= classification %></b></div>
 
             <div class="bottom-left">
-                Số hiệu:<br>
-                Số vào sổ cấp bằng:
+                Số hiệu: <%= number %><br>
+                    Số vào sổ cấp bằng:
             </div>
             <div class="bottom-right">
                 HIỆU TRƯỞNG<br><br><br>(Ký, ghi rõ họ tên, đóng dấu)
@@ -150,7 +151,7 @@
                 Independence – Freedom – Happiness
             </div>
             <div class="logo">
-                <img src="logo.png" alt="Logo Electric Power University">
+                <img src="<%= logoBase64 %>" alt="Logo Electric Power University">
             </div>
             <div class="title">
                 THE RECTOR<br>
@@ -159,15 +160,15 @@
             </div>
 
             <div class="field center">upon</div>
-            <div class="field">Full name:</div>
-            <div class="field">Date of birth:</div>
-            <div class="field">Mode of study:</div>
-            <div class="field">Year of graduation:</div>
-            <div class="field">Degree classification:</div>
+            <div class="field">Full name: <%= fullname %></div>
+            <div class="field">Date of birth: <%= dob %></div>
+            <div class="field">Mode of study: full-time</div>
+            <div class="field">Year of graduation: <%= gradYear %></div>
+            <div class="field">Degree classification: <b><%= classificationEn %></b></div>
 
             <div class="bottom-left">
-                Serial number:<br>
-                Reference number:
+                Serial number: <%= number %><br>
+                    Reference number:
             </div>
             <div class="bottom-right">
                 THE RECTOR<br><br><br>(Signature & Seal)

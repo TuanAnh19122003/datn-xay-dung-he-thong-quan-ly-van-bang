@@ -1,6 +1,6 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
-	import { Eye, Pencil, Trash2, ChevronLeft, ChevronRight } from 'lucide-svelte';
+	import { Eye, Pencil, Trash2, Printer, ChevronLeft, ChevronRight } from 'lucide-svelte';
 
 	export let data = [];
 	export let pagination = { current: 1, pageSize: 5, total: 0 };
@@ -17,6 +17,9 @@
 		if (confirm('Bạn có chắc chắn muốn xóa chứng chỉ này?')) {
 			dispatch('delete', id);
 		}
+	}
+	function handlePrint(cert) {
+		dispatch('print', cert);
 	}
 
 	$: totalPages = Math.ceil(pagination.total / pagination.pageSize);
@@ -56,40 +59,36 @@
 		<tbody class="divide-y divide-gray-100">
 			{#each data as cert, index}
 				<tr class="hover:bg-gray-50">
-					<td class="px-2 py-3 text-center">
-						{(pagination.current - 1) * pagination.pageSize + index + 1}
-					</td>
+					<td class="px-2 py-3 text-center"
+						>{(pagination.current - 1) * pagination.pageSize + index + 1}</td
+					>
 					<td class="px-4 py-3">{cert.number}</td>
 					<td class="px-4 py-3">{cert.type}</td>
-					<td class="px-4 py-3">
-						{#if cert.studentName}
-							{cert.studentName}
-						{:else}
-							-
-						{/if}
-					</td>
+					<td class="px-4 py-3">{cert.studentName || '-'}</td>
 					<td class="px-4 py-3">{cert.gradDate || '-'}</td>
 					<td class="px-4 py-3">{cert.status}</td>
 					<td class="px-4 py-3 text-center">
 						<div class="flex justify-center gap-2">
 							<button
 								class="rounded-lg bg-gray-100 p-2 hover:bg-gray-200"
-								on:click={() => handleView(cert)}
+								on:click={() => handleView(cert)}><Eye class="h-4 w-4" /></button
 							>
-								<Eye class="h-4 w-4" />
-							</button>
 							<button
 								class="rounded-lg bg-blue-500 p-2 text-white hover:bg-blue-600"
-								on:click={() => handleEdit(cert)}
+								on:click={() => handleEdit(cert)}><Pencil class="h-4 w-4" /></button
 							>
-								<Pencil class="h-4 w-4" />
+							<button
+								class="rounded-lg bg-green-500 p-2 text-white hover:bg-green-600 disabled:cursor-not-allowed disabled:bg-gray-300"
+								on:click={() => handlePrint(cert)}
+								disabled={cert.status !== 'issued'}
+							>
+								<Printer class="h-4 w-4" />
 							</button>
+
 							<button
 								class="rounded-lg bg-red-500 p-2 text-white hover:bg-red-600"
-								on:click={() => handleDelete(cert.id)}
+								on:click={() => handleDelete(cert.id)}><Trash2 class="h-4 w-4" /></button
 							>
-								<Trash2 class="h-4 w-4" />
-							</button>
 						</div>
 					</td>
 				</tr>
