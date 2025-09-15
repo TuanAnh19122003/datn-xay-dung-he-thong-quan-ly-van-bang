@@ -7,13 +7,14 @@ const { getClassification } = require('../utils/classification');
 const Student = require('../models/student.model');
 const Template = require('../models/template.model');
 const normalizeFileName = require('../utils/normalizeName');
+const { Sequelize } = require('sequelize');
 
 class CertService {
     static async findAll(options = {}) {
-        const { offset, limit } = options;
+        const { offset, limit, sort } = options;
 
         const queryOptions = {
-            order: [['createdAt', 'ASC']]
+            order: [['createdAt', sort === 'desc' ? 'DESC' : 'ASC']]
         };
 
         if (offset !== undefined && limit !== undefined) {
@@ -121,6 +122,33 @@ class CertService {
         await cert.update({ fileUrl: `outputs/${fileName}` });
 
         return rendered;
+    }
+
+    static async count() {
+        return await Cert.count();
+    }
+
+    static async statsByStatus() {
+        const issued = await Cert.count({ where: { status: 'issued' } });
+        const draft = await Cert.count({ where: { status: 'draft' } });
+        const revoked = await Cert.count({ where: { status: 'revoked' } });
+        return { issued, draft, revoked };
+    }
+
+    static async statsByYear() {
+        const data = await Cert.findAll({
+            attributes: [
+                [Sequelize.fn('YEAR', Sequelize.col('gradDate')), 'year'],
+                [Sequelize.fn('COUNT', Sequelize.col('id')), 'count']
+            ],
+            group: [Sequelize.fn('YEAR', Sequelize.col('gradDate'))],
+            order: [[Sequelize.fn('YEAR', Sequelize.col('gradDate')), 'ASC']]
+        });
+
+        return data.map(item => ({
+            year: item.dataValues.year,
+            count: item.dataValues.count
+        }));
     }
 
 }

@@ -3,7 +3,7 @@ const { Cert, Student, Major, Template } = require('../models');
 const studentSearch = require('../meilisearch/student.search');
 
 class StudentController {
-async findAll(req, res) {
+    async findAll(req, res) {
         try {
             const page = parseInt(req.query.page);
             const pageSize = parseInt(req.query.pageSize);
@@ -162,7 +162,26 @@ async findAll(req, res) {
         }
     }
 
+    async count(req, res) {
+        try {
+            const total = await StudentService.count();
+            res.status(200).json({
+                success: true,
+                total
+            })
+        } catch (error) {
+            res.status(500).json({ success: false, message: err.message });
+        }
+    }
 
+    async statsByMajor(req, res) {
+        try {
+            const data = await StudentService.statsByMajor();
+            res.status(200).json(data);
+        } catch (err) {
+            res.status(500).json({ success: false, message: err.message });
+        }
+    }
 }
 
 module.exports = new StudentController();

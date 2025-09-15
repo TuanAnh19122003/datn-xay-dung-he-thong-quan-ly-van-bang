@@ -129,8 +129,35 @@ class CertController {
             res.setHeader('Content-Type', 'text/html; charset=utf-8');
             res.send(html);
         } catch (error) {
-            console.error("❌ Lỗi khi in chứng chỉ:", error);
+            console.error("Lỗi khi in chứng chỉ:", error);
             res.status(500).json({ success: false, message: error.message });
+        }
+    }
+
+    async count(req, res) {
+        try {
+            const total = await CertService.count();
+            res.json({ total });
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    }
+
+    async certStatsByStatus(req, res) {
+        try {
+            const stats = await CertService.statsByStatus();
+            res.json(stats);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    }
+
+    async certStatsByYear(req, res) {
+        try {
+            const stats = await CertService.statsByYear();
+            res.json(stats);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
         }
     }
 

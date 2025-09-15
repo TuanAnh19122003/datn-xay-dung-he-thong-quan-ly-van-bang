@@ -1,9 +1,11 @@
 const Student = require('../models/student.model');
 const Cert = require('../models/cert.model');
 const Major = require('../models/major.model');
+const Template = require('../models/template.model');
 const studentSearch = require('../meilisearch/student.search');
 const path = require('path');
 const fs = require('fs');
+const { Sequelize } = require('sequelize');
 
 class StudentService {
     static async findAll(options = {}) {
@@ -22,7 +24,7 @@ class StudentService {
             ...queryOptions,
             include: [
                 {
-                    model: require('../models/major.model'),
+                    model: Major,
                     as: 'major',
                     attributes: ['name']
                 }
@@ -38,28 +40,24 @@ class StudentService {
         }
 
         const student = await Student.create(data);
-        await studentSearch.add(student)
+        await studentSearch.add(student);
         return student;
     }
 
     static async update(id, data, file) {
-        const student = await Student.findOne({ where: { id: id } });
+        const student = await Student.findOne({ where: { id } });
         if (!student) throw new Error('student không tồn tại');
 
         if (file) {
             if (student.image) {
                 const oldImagePath = path.join(__dirname, '..', student.image);
-
-                if (fs.existsSync(oldImagePath)) {
-                    fs.unlinkSync(oldImagePath);
-                }
+                if (fs.existsSync(oldImagePath)) fs.unlinkSync(oldImagePath);
             }
-
             data.image = `uploads/${file.filename}`;
         }
 
         const updated = await student.update(data);
-        await studentSearch.update(updated)
+        await studentSearch.update(updated);
         return updated;
     }
 
@@ -72,14 +70,14 @@ class StudentService {
         return true;
     }
 
-    static async getCertsByStudent(studentId) {
+    static async getCertsByStudent(studentCode) {
         const certs = await Cert.findAll({
             include: [
                 {
                     model: Student,
                     as: 'student',
                     attributes: ['id', 'code', 'lastname', 'firstname'],
-                    where: { code: studentCode }, // lọc theo mã sinh viên
+                    where: { code: studentCode },
                     include: [
                         {
                             model: Major,
@@ -95,10 +93,36 @@ class StudentService {
                 }
             ]
         });
-        
-        return certs
+
+        return certs;
+    }
+
+    static async count() {
+        return await Student.count();
+    }
+
+    static async statsByMajor() {
+        try {
+            const data = await Student.findAll({
+                attributes: [
+                    [Sequelize.fn('COUNT', Sequelize.col('Student.id')), 'count']
+                ],
+                include: [
+                    { model: Major, as: 'major', attributes: ['name'] }
+                ],
+                group: ['major.id'] // quan trọng
+            });
+
+            return data.map(item => ({
+                major: item.major?.name || 'Unknown',
+                count: parseInt(item.dataValues.count)
+            }));
+        } catch (err) {
+            console.error(err);
+            throw new Error('Lỗi khi thống kê sinh viên theo ngành');
+        }
     }
 
 }
 
-module.exports = StudentService
+module.exports = StudentService;

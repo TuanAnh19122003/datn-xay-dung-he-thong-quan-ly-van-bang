@@ -129,6 +129,15 @@ class TemplateController {
             res.status(500).json({ success: false, message: err.message });
         }
     }
+
+    async count(req, res) {
+        try {
+            const total = await TemplateService.count();
+            res.json({ total });
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    }
 }
 
 module.exports = new TemplateController();

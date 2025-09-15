@@ -5,6 +5,7 @@ const controller = require('../controllers/template.controller');
 
 router.get('/', controller.findAll);
 router.get('/search', controller.search);
+router.get('/count', controller.count);
 router.post('/', controller.create);
 router.put('/:id', controller.update);
 router.delete('/:id', controller.delete)

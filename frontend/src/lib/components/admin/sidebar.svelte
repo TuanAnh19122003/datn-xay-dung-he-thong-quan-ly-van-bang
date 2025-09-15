@@ -1,6 +1,5 @@
 <script>
 	import { onMount } from 'svelte';
-	import { goto } from '$app/navigation';
 	import { writable } from 'svelte/store';
 	import {
 		User,
@@ -35,46 +34,70 @@
 		{ key: 'major', label: 'Chuyên ngành', link: '/admin/major', icon: Book },
 		{ key: 'template', label: 'Template', link: '/admin/template', icon: FileText },
 		{ key: 'student', label: 'Sinh viên', link: '/admin/student', icon: GraduationCap },
-		{ key: 'certs', label: 'Quản lý văn bằng', link: '/admin/cert', icon: Award  },
+		{ key: 'certs', label: 'Quản lý văn bằng', link: '/admin/cert', icon: Award },
 		{ key: 'logs', label: 'Kiểm tra logs & văn bằng', link: '/admin/log', icon: Clipboard }
 	];
 </script>
 
-<aside
-	class={`bg-gray-900 text-white ${collapsed ? 'w-20' : 'w-64'} flex h-screen flex-col transition-all`}
->
-	<!-- Logo -->
-	<a href="/admin" class="flex items-center justify-center p-4">
-		<img
-			src="/img/logo.png"
-			alt="Logo"
-			class={`rounded-lg shadow-md transition-all ${collapsed ? 'h-10 w-10' : 'h-24 w-24'}`}
-		/>
-	</a>
-
-	<!-- Menu -->
-	<nav class="mt-6 flex-1">
-		{#each menuItems as item}
-			<a
-				href={item.link}
-				class="mx-2 my-1 flex items-center gap-3 rounded-lg px-4 py-2 text-white transition-colors hover:bg-gray-700"
-			>
-				<svelte:component this={item.icon} class="h-5 w-5" />
-				{#if !collapsed}
-					<span class="font-medium">{item.label}</span>
-				{/if}
-			</a>
-		{/each}
-	</nav>
-
-	<button
-		class="m-2 rounded-full bg-gray-800 p-2 transition hover:bg-gray-700"
-		on:click={() => (collapsed = !collapsed)}
+<!-- Layout container -->
+<div class="flex min-h-screen">
+	<!-- Sidebar -->
+	<aside
+		class={`flex flex-col bg-gray-900 text-white transition-all ${collapsed ? 'w-20' : 'w-64'}`}
 	>
-		{#if collapsed}
-			<ChevronRight class="h-5 w-5 text-white" />
-		{:else}
-			<ChevronLeft class="h-5 w-5 text-white" />
-		{/if}
-	</button>
-</aside>
+		<!-- Logo -->
+		<a href="/admin" class="flex items-center justify-center p-4">
+			<img
+				src="/img/logo.png"
+				alt="Logo"
+				class={`rounded-lg shadow-md transition-all ${collapsed ? 'h-10 w-10' : 'h-24 w-24'}`}
+			/>
+		</a>
+
+		<!-- Menu -->
+		<nav class="mt-6 flex-1 overflow-auto">
+			{#each menuItems as item}
+				<a
+					href={item.link}
+					class="mx-2 my-1 flex items-center gap-3 rounded-lg px-4 py-2 text-white transition-colors hover:bg-gray-700"
+				>
+					<svelte:component this={item.icon} class="h-5 w-5" />
+					{#if !collapsed}
+						<span class="font-medium">{item.label}</span>
+					{/if}
+				</a>
+			{/each}
+		</nav>
+
+		<!-- Collapse button -->
+		<button
+			class="m-2 self-end rounded-full bg-gray-800 p-2 transition hover:bg-gray-700"
+			on:click={() => (collapsed = !collapsed)}
+		>
+			{#if collapsed}
+				<ChevronRight class="h-5 w-5 text-white" />
+			{:else}
+				<ChevronLeft class="h-5 w-5 text-white" />
+			{/if}
+		</button>
+	</aside>
+
+	<!-- Main content -->
+	<main class="flex-1 overflow-auto bg-gray-100 p-6">
+		<slot />
+	</main>
+</div>
+
+<style>
+	/* Scrollbar cho sidebar nếu dài */
+	aside::-webkit-scrollbar {
+		width: 6px;
+	}
+	aside::-webkit-scrollbar-thumb {
+		background-color: rgba(255, 255, 255, 0.2);
+		border-radius: 3px;
+	}
+	aside::-webkit-scrollbar-track {
+		background: transparent;
+	}
+</style>

@@ -42,7 +42,7 @@
 </script>
 
 <header class="flex items-center justify-between bg-gray-100 p-4 shadow-md">
-	<div class="text-xl font-bold">Admin Panel</div>
+	<div class="text-xl font-bold">Hệ thống quản lý văn bằng</div>
 
 	<div class="relative">
 		<!-- Avatar và tên -->

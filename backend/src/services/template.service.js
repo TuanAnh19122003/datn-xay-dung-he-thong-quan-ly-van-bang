@@ -26,13 +26,13 @@ class TemplateService {
 
     static async update(id, data) {
         const template = await Template.findOne({ where: { id: id } })
-        if(!template) throw new Error('Không tìm thấy template');
+        if (!template) throw new Error('Không tìm thấy template');
 
         const updated = await template.update(data);
         await templateSearch.update(updated)
         return updated;
     }
-    
+
     static async delete(id) {
         const template = await Template.findOne({ where: { id } });
         if (!template) throw new Error('template không tồn tại');
@@ -40,6 +40,10 @@ class TemplateService {
         await Template.destroy({ where: { id } });
         await templateSearch.delete(id);
         return true;
+    }
+
+    static async count() {
+        return await Template.count();
     }
 }
 
