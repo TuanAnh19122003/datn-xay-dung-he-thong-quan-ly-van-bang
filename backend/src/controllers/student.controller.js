@@ -1,6 +1,7 @@
 const StudentService = require('../services/student.service');
 const { Cert, Student, Major, Template } = require('../models');
 const studentSearch = require('../meilisearch/student.search');
+const certSearch = require('../meilisearch/cert.search');
 
 class StudentController {
     async findAll(req, res) {
@@ -145,19 +146,27 @@ class StudentController {
     async search(req, res) {
         try {
             const q = req.query.q || '';
-            let results;
+            let results = [];
 
             if (/^\d+$/.test(q)) {
-                results = await studentSearch.search('', {
+                const studentRes = await studentSearch.search('', {
                     filter: `code = "${q}"`,
                     limit: 1
                 });
-            } else {
-                results = await studentSearch.search(q, { limit: 50 });
+                results = studentRes.hits.map(s => ({ ...s, type: 'student' }));
+            } else if (q.trim() !== '') {
+                const studentRes = await studentSearch.search(q, { limit: 50 });
+                const certRes = await certSearch.search(q, { limit: 50 });
+
+                const students = studentRes.hits.map(s => ({ ...s, type: 'student' }));
+                const certs = certRes.hits.map(c => ({ ...c, type: 'certs' }));
+
+                results = [...students, ...certs];
             }
 
-            res.status(200).json({ success: true, data: results.hits });
+            res.status(200).json({ success: true, data: results });
         } catch (err) {
+            console.error(err);
             res.status(500).json({ success: false, message: err.message });
         }
     }

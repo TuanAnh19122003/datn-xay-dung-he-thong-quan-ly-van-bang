@@ -63,6 +63,7 @@
 		</div>
 
 		<!-- Dropdown -->
+		<!-- Dropdown -->
 		{#if $dropdownOpen}
 			<div
 				class="animate-fadeIn absolute right-0 z-50 mt-2 w-52 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl"
@@ -84,6 +85,7 @@
 					>
 					Thông tin cá nhân
 				</button>
+
 				<button
 					class="flex w-full items-center gap-2 px-4 py-3 text-left font-medium text-gray-700 transition hover:bg-purple-50"
 					on:click={() => {
@@ -101,6 +103,26 @@
 					>
 					Cài đặt
 				</button>
+
+				<!-- Mục tìm kiếm mới -->
+				<button
+					class="flex w-full items-center gap-2 px-4 py-3 text-left font-medium text-gray-700 transition hover:bg-purple-50"
+					on:click={() => {
+						goto('/');
+						dropdownOpen.set(false);
+					}}
+				>
+					<svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+						/>
+					</svg>
+					Tìm kiếm
+				</button>
+
 				<hr class="border-gray-200" />
 				<button
 					class="flex w-full items-center gap-2 px-4 py-3 text-left font-bold text-red-600 transition hover:bg-red-100"
@@ -124,7 +146,7 @@
 <!-- Toast thông báo -->
 {#if $showToast}
 	<div
-		class="animate-fadeInOut fixed top-5 left-1/2 -translate-x-1/2 rounded-lg bg-green-500 px-6 py-3 text-white shadow-lg z-50"
+		class="animate-fadeInOut fixed top-5 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-green-500 px-6 py-3 text-white shadow-lg"
 	>
 		{toastMessage}
 	</div>
