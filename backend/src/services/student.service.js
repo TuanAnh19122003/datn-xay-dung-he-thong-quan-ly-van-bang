@@ -110,7 +110,7 @@ class StudentService {
                 include: [
                     { model: Major, as: 'major', attributes: ['name'] }
                 ],
-                group: ['major.id'] // quan trọng
+                group: ['major.id']
             });
 
             return data.map(item => ({

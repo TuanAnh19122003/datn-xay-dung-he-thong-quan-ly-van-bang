@@ -14,7 +14,7 @@ class TemplateController {
                 result = await TemplateService.findAll();
                 return res.status(200).json({
                     success: true,
-                    message: 'Lấy tất cả vai trò thành công',
+                    message: 'Lấy tất cả thành công',
                     data: result.rows,
                     total: result.count
                 });
@@ -25,7 +25,7 @@ class TemplateController {
 
             res.status(200).json({
                 success: true,
-                message: 'Lấy danh sách vai trò thành công',
+                message: 'Lấy danh sách thành công',
                 data: result.rows,
                 total: result.count,
                 page,
@@ -35,7 +35,7 @@ class TemplateController {
             console.error('Lỗi:', error);
             res.status(500).json({
                 success: false,
-                message: 'Đã xảy ra lỗi khi lấy danh sách vai trò',
+                message: 'Đã xảy ra lỗi khi lấy danh sách',
                 error: error.message
             });
         }

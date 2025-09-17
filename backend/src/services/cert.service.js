@@ -73,7 +73,7 @@ class CertService {
         });
         if (!cert) throw new Error("Không tìm thấy chứng chỉ");
 
-        // ✅ Chỉ cho in khi đã cấp
+        // Chỉ cho in khi đã cấp
         if (cert.status !== 'issued') {
             throw new Error("Chứng chỉ chưa được phát hành, không thể in");
         }

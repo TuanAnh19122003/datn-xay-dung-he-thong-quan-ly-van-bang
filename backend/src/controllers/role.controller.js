@@ -80,7 +80,7 @@ class RoleController {
             if (deletedCount === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: 'Không tìm thấy role để xóa'
+                    message: 'Không tìm thấy vai trò để xóa'
                 });
             }
 

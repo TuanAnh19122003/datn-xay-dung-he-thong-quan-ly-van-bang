@@ -5,7 +5,7 @@ class LogService {
         const { offset, limit } = options;
 
         const queryOptions = {
-            order: [['createdAt', 'ASC']]
+            order: [['createdAt', 'DESC']]
         };
 
         if (offset !== undefined && limit !== undefined) {

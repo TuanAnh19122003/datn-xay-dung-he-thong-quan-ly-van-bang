@@ -1,6 +1,6 @@
 function getClientIp(req) {
     let ip =
-        req.headers['x-forwarded-for']?.split(',')[0] || // nếu đi qua proxy / load balancer
+        req.headers['x-forwarded-for']?.split(',')[0] ||
         req.connection?.remoteAddress ||
         req.socket?.remoteAddress ||
         req.ip;

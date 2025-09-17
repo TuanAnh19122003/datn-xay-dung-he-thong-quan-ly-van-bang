@@ -34,7 +34,7 @@ class CertController {
         } catch (error) {
             res.status(500).json({
                 success: false,
-                message: 'Đã xảy ra lỗi khi lấy danh sách người dùng',
+                message: 'Đã xảy ra lỗi khi lấy danh sách',
                 error: error.message
             });
         }
@@ -49,7 +49,7 @@ class CertController {
                 data
             })
         } catch (error) {
-            console.error('❌ Lỗi khi thêm chứng chỉ:', error);
+            console.error('Lỗi khi thêm chứng chỉ:', error);
             res.status(500).json({
                 success: false,
                 message: error.message
